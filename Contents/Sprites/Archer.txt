@@ -1,0 +1,30 @@
+1024
+683
+start
+Drop 750 1
+24 30 68 84
+700 273 78 69
+24 30 68 84
+end
+start
+Drag 0 1
+365 142 71 88
+end
+start
+StandingLeft 0 1
+24 30 68 84
+end
+start
+StandingRight 0 1
+817 371 68 84
+end
+start
+WalkingLeft 300 0
+365 30 68 84
+590 30 68 84
+end
+start
+WalkingRight 300 0
+705 30 68 84
+821 30 68 84
+end
