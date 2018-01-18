@@ -14,7 +14,7 @@ function scene:create( event )
   local placeholder = display.newText('Main menu', display.contentCenterX, display.contentCenterY, native.systemFont, 24)
   sceneGroup:insert(placeholder)
 
-  local btn_Continue = ComponentRenderer:renderButton('Assets/Buttons/Btn_Continue.png', { -- modify filename to show disable if game has saved data
+  local btn_Continue = ComponentRenderer:renderButton(Game.savedData and 'Assets/Buttons/Btn_Continue.png' or 'Assets/Buttons/Btn_ContinueDisabled.png', { 
     filename_clicked = Game.savedData and 'Assets/Buttons/Btn_ContinueClicked.png' or nil,
     width = 300, 
     height = 86,
@@ -31,8 +31,8 @@ function scene:create( event )
   end)
   sceneGroup:insert(btn_Continue)
   
-  local btn_StartNewGame = ComponentRenderer:renderButton('Assets/Buttons/Btn_Play.png', {
-    filename_clicked = 'Assets/Buttons/Btn_PlayClicked.png',
+  local btn_StartNewGame = ComponentRenderer:renderButton('Assets/Buttons/Btn_NewGame.png', {
+    filename_clicked = 'Assets/Buttons/Btn_NewGameClicked.png',
     width = 300,
     height = 86,
     x = display.contentCenterX, 
@@ -46,8 +46,8 @@ function scene:create( event )
   end)
   sceneGroup:insert(btn_StartNewGame)
 
-  local btn_Leaderboard = ComponentRenderer:renderButton('Assets/Buttons/Btn_Play.png', {
-    filename_clicked = 'Assets/Buttons/Btn_PlayClicked.png',
+  local btn_Leaderboard = ComponentRenderer:renderButton('Assets/Buttons/Btn_Leaderboard.png', {
+    filename_clicked = 'Assets/Buttons/Btn_LeaderboardClicked.png',
     width = 300,
     height = 86,
     x = display.contentCenterX, 

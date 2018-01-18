@@ -16,15 +16,16 @@ function String:filterLetters(self, options)
 end
 
 function String:filterNumbers(self, options)
+  print(self)
   if self == '' then 
     return nil
   end
 
   local retNumber = self
   if options and options.withSpaces then 
-    retNumber = string.sub(retString, string.find(retString, '[^%c%a]+'))
+    retNumber = string.sub(retNumber, string.find(retNumber, '[^%c%a]+'))
   else
-    retNumber = tonumber(string.sub(retString, string.find(retString, '%d+')))
+    retNumber = tonumber(string.sub(retNumber, string.find(retNumber, '%d+')))
   end
 
   return retNumber
@@ -39,7 +40,7 @@ function String:filterAlphaNumeric(self, options)
   if options and options.withSpaces then 
     retString = string.sub(retString, string.find(retString, '[^%c]+'))
   else
-    retString = string.sub(self, string.find(self, '%w+'))
+    retString = string.sub(retString, string.find(retString, '%w+'))
   end
 
   return retString

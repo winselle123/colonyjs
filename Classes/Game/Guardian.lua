@@ -1,3 +1,6 @@
+local String = require('Classes.System.String')
+local GameObject = require('Classes.System.GameObject')
+
 local GuardianRenderer = require('Classes.Renderer.GuardianRenderer')
 
 local Guardian = {
@@ -16,24 +19,39 @@ function Guardian:new(class)
     return nil
   else
     guardian = {
-      class = classFile:read(), 
-      attack = classFile:read(), 
-      defense = classFile:read(), 
-      speed = classFile:read(), 
-      attackSpeed = classFile:read(), 
-      health = classFile:read(), 
-      sightRadius = classFile:read(),
+      class = String:filterLetters(classFile:read()), 
+      desc = classFile:read(),
+      attack = String:filterNumbers(classFile:read()), 
+      defense = String:filterNumbers(classFile:read()), 
+      speed = String:filterNumbers(classFile:read()), 
+      attackSpeed = String:filterNumbers(classFile:read()), 
+      health = String:filterNumbers(classFile:read()), 
+      sightRadius = String:filterNumbers(classFile:read()),
+
+      hasChanged = false
     }
     guardian.id = guardian.class .. Guardian.guardianIndex
     guardian.x = display.contentCenterX
     guardian.y = display.contentCenterY
 
+    guardian.info = GuardianRenderer:prepareInfo(guardian)
     guardian.view = GuardianRenderer:prepare(guardian, {
       xScale = 0.75, 
-      yScale = 0.75
+      yScale = 0.75,
+      isStart = true
     }) 
 
     guardian.destroy = function() 
+      -- REMOVE GUARDIANS FROM GAME OBJECTS
+      local index = 0
+      for i, v in ipairs(GameObject.gameObjectSet) do
+        if v.id == guardian.id then
+          index = i
+          break
+        end
+      end
+      table.remove(GameObject.gameObjectSet, index)
+
       -- DEAL WITH DISPLAY; MAKE IT NOT VISIBLE
       guardian.view.smokeSprite.isVisible = true
       guardian.view.smokeSprite:addEventListener('sprite', function(event)
@@ -46,15 +64,23 @@ function Guardian:new(class)
             end
           end
 
+          guardian.info.isVisible = false
           guardian.view.isVisible = false
-          guardian = nil
         end
       end)
       guardian.view.smokeSprite.animate('Poof')
     end
 
+    guardian.draw = function() 
+      GuardianRenderer:draw(guardian, {
+        xScale = 0.75,
+        yScale = 0.75
+      })
+    end
+
     Guardian.guardianIndex = Guardian.guardianIndex + 1
     table.insert(Guardian.guardianSet, guardian)
+    table.insert(GameObject.gameObjectSet, { id = guardian.id, object = guardian })
     return guardian 
   end 
 end

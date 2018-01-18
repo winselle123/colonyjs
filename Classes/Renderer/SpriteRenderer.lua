@@ -2,8 +2,9 @@ local String = require('Classes.System.String')
 
 local SpriteRenderer = {} 
 
-function SpriteRenderer:prepare(parent, options)
-  local spriteFileName = 'Contents/Sprites/' .. parent.class .. '.txt'
+function SpriteRenderer:draw(parent, options)
+  local class = String:filterLetters(parent.class)
+  local spriteFileName = 'Contents/Sprites/' .. class .. '.txt'
   local spritePath = system.pathForFile(spriteFileName)
   local spriteFile, err = io.open(spritePath, 'r')
 
@@ -56,7 +57,7 @@ function SpriteRenderer:prepare(parent, options)
       sheetContentHeight = sheetHeight
     }
     local sequenceData = seqTable
-    local imageSheet = graphics.newImageSheet('Assets/Sprites/' .. parent.class .. '.png', sheetOptions)
+    local imageSheet = graphics.newImageSheet('Assets/Sprites/' .. class .. '.png', sheetOptions)
     local sprite = display.newSprite(imageSheet, sequenceData)
     if options and options.xScale and options.yScale then sprite:scale(options.xScale, options.yScale) end
     sprite.isVisible = true
