@@ -16,7 +16,6 @@ function String:filterLetters(self, options)
 end
 
 function String:filterNumbers(self, options)
-  print(self)
   if self == '' then 
     return nil
   end

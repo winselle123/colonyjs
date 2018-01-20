@@ -1,6 +1,8 @@
 local String = require('Classes.System.String')
 local GameObject = require('Classes.System.GameObject')
 
+local Event = require('Classes.Game.Event')
+
 local GuardianRenderer = require('Classes.Renderer.GuardianRenderer')
 
 local Guardian = {
@@ -33,6 +35,8 @@ function Guardian:new(class)
     guardian.id = guardian.class .. Guardian.guardianIndex
     guardian.x = display.contentCenterX
     guardian.y = display.contentCenterY
+
+    guardian.events = Event:newSet(guardian)
 
     guardian.info = GuardianRenderer:prepareInfo(guardian)
     guardian.view = GuardianRenderer:prepare(guardian, {

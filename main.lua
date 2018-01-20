@@ -14,6 +14,10 @@ Runtime:addEventListener('key', function(event)
         print('Battle')
         composer.gotoScene('Classes.Scenes.UpgradeTree')
       end,
+      ['Change looks'] = function() 
+        print('Battle')
+        composer.gotoScene('Classes.Scenes.UpgradeTree')
+      end,
       ['Options from battle'] = function() 
         print('Options battle')
         composer.gotoScene('Classes.Scenes.BattleProper')

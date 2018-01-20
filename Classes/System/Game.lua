@@ -24,8 +24,8 @@ function Game:_destroy()
   -- SAVE PROGRESS
   -- DESTROY ALL GAME OBJECTS
   for i, v in ipairs(GameObject.gameObjectSet) do
-    v.view:removeSelf()
-    v.view.isVisible = false
+    v.object.view:removeSelf()
+    v.object.view.isVisible = false
   end
   for i, v in ipairs(GameObject.gameObjectSet) do v = nil end
   GameObject.gameObjectSet = {}

@@ -1,5 +1,6 @@
 local Panel = require('Classes.System.Panel')
 local SpriteRenderer = require('Classes.Renderer.SpriteRenderer')
+local EventRenderer = require('Classes.Renderer.EventRenderer')
 
 local GuardianRenderer = {
   activeGuardian = nil
@@ -8,17 +9,25 @@ local GuardianRenderer = {
 function GuardianRenderer:prepare(parent, options) 
   local guardianGroup = display.newGroup() 
 
+  -- SETUP GO-ALONG INFORMATION
+  guardianGroup.health = display.newText(guardianGroup, 'Health: ' .. parent.health, 0, -52, native.systemFont, 24)
+  guardianGroup.class = display.newText(guardianGroup, parent.class, 0, 52, native.systemFont, 24)
+
   -- SETUP TOGGLEABLE DISPLAYS
   local toggleables = display.newGroup() 
   toggleables.sightRadius = display.newCircle(toggleables, 0, 0, parent.sightRadius) -- sight radius
   toggleables.sightRadius:setFillColor(1, 0.25)
+  toggleables.skillButton = display.newCircle(toggleables, -40, -105, 30)
+  toggleables.skillButton:addEventListener('touch', function(event) 
+    if event.phase == 'ended' then
+      parent.events.view = EventRenderer:prepareEventList(parent.events)
+      parent.events.view.isVisible = true
+    end
+  end)
+  toggleables.itemButton = display.newCircle(toggleables, 35, -105, 30)
   toggleables.isVisible = false
   guardianGroup.toggleables = toggleables
   guardianGroup:insert(toggleables)
-
-  -- SETUP GO-ALONG INFORMATION
-  guardianGroup.health = display.newText(guardianGroup, 'Health: ' .. parent.health, 0, -52, native.systemFont, 24)
-  guardianGroup.class = display.newText(guardianGroup, parent.class, 0, 52, native.systemFont, 24)
 
   -- SETUP SPRITE
   guardianGroup.sprite = SpriteRenderer:draw(parent, options)
@@ -113,14 +122,13 @@ parent.desc .. '\n\n' ..
     guardian.sightRadius = ]] .. parent.sightRadius .. [[
 
 } ]]
-  local fill = {
-    type = 'image', 
-    filename = 'Assets/ClassIcons/' .. parent.class .. 'White.png'
-  }
   local infoGroup = display.newGroup()
   infoGroup.container = display.newRoundedRect(infoGroup, 0, 0, 500, 750, 10)
   infoGroup.icon = display.newCircle(infoGroup, 0, -(infoGroup.container.height / 2), 75)
-  infoGroup.icon.fill = fill
+  infoGroup.icon.fill = {
+    type = 'image', 
+    filename = 'Assets/ClassIcons/' .. parent.class .. 'White.png'
+  }
   infoGroup.icon.strokeWidth = 5
   infoGroup.icon:setStrokeColor(0)
   infoGroup.text = display.newText({

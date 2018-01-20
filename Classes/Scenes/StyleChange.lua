@@ -11,36 +11,8 @@ function scene:create( event )
   local sceneGroup = self.view
   -- Code here runs when the scene is first created but has not yet appeared on screen
 
-  local placeholder = display.newText('Upgrade tree with start game', display.contentCenterX, display.contentCenterY, native.systemFont, 24)
+  local placeholder = display.newText('Change looks', display.contentCenterX, display.contentCenterY, native.systemFont, 24)
   sceneGroup:insert(placeholder)
-
-  local btn_StartGame = ComponentRenderer:renderButton('Assets/Buttons/Btn_Play.png', {
-    filename_clicked = 'Assets/Buttons/Btn_PlayClicked.png',
-    width = 300,
-    height = 86,
-  })
-  btn_StartGame.x = display.contentCenterX - btn_StartGame.width / 2 - 25
-  btn_StartGame.y = (display.contentHeight - btn_StartGame.height / 2) - 100
-  btn_StartGame:addEventListener('touch', function(event)
-    if event.phase == 'ended' then
-      composer.gotoScene('Classes.Scenes.BattleProper')
-    end
-  end)
-  sceneGroup:insert(btn_StartGame)
-
-  local btn_ChangeLooks = ComponentRenderer:renderButton('Assets/Buttons/Btn_Style.png', {
-    filename_clicked = 'Assets/Buttons/Btn_StyleClicked.png',
-    width = 300,
-    height = 86,
-  })
-  btn_ChangeLooks.x = display.contentCenterX + btn_StartGame.width / 2 + 25
-  btn_ChangeLooks.y = (display.contentHeight - btn_StartGame.height / 2) - 100
-  btn_ChangeLooks:addEventListener('touch', function(event)
-    if event.phase == 'ended' then
-      composer.gotoScene('Classes.Scenes.StyleChange')
-    end
-  end)
-  sceneGroup:insert(btn_ChangeLooks)
 end
 
 -- show()
@@ -51,7 +23,7 @@ function scene:show( event )
 
   if ( phase == "will" ) then
     -- Code here runs when the scene is still off screen (but is about to come on screen)
-    Game.sceneActivated = 'Upgrade tree'
+    Game.sceneActivated = 'Change looks'
 
   elseif ( phase == "did" ) then
     -- Code here runs when the scene is entirely on screen
