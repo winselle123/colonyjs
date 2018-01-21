@@ -26,6 +26,40 @@ function SkillRenderer:prepareSkillList(parent, options)
     displayGroup.cardSetGroup[v].cardGroup.cardContainer.strokeWidth = 3
     displayGroup.cardSetGroup[v].cardGroup.cardContainer:setStrokeColor(0)
     displayGroup.cardSetGroup[v].cardGroup.x = displayGroup.cardSetGroup[v].cardGroup.width / 2 + (index - 1) * displayGroup.cardSetGroup[v].cardGroup.width + index * 10
+    displayGroup.cardSetGroup[v].cardGroup.cardContainer:addEventListener('touch', function(event) 
+      if event.phase == 'ended' then
+        SkillRenderer:updateSkill(v)
+      end
+      return true
+    end)
+
+    displayGroup.cardSetGroup[v].cardGroup.cardRemover = ComponentRenderer:renderButton('Assets/Buttons/Btn_Remove.png', {
+      filename_clicked = 'Assets/Buttons/Btn_RemoveClicked.png',
+      width = 50, 
+      height = 50,
+    })
+    displayGroup.cardSetGroup[v].cardGroup.cardRemover.x = displayGroup.cardSetGroup[v].cardGroup.cardContainer.x
+    displayGroup.cardSetGroup[v].cardGroup.cardRemover.y = displayGroup.cardSetGroup[v].cardGroup.cardContainer.y + displayGroup.cardSetGroup[v].cardGroup.cardContainer.height / 2 - displayGroup.cardSetGroup[v].cardGroup.cardRemover.height / 2
+    displayGroup.cardSetGroup[v].cardGroup.cardRemover:addEventListener('touch', function(event) 
+      if event.phase == 'ended' then
+        local index = 0 
+        for i, r in ipairs(parent) do -- WHERE R IS THE VARIABLE FOR THE SKILL TO BE REMOVED
+          if r == v then
+            index = i
+          end
+        end
+        table.remove(parent, index)
+
+        -- UPDATE SKILL DISPLAY
+        options.skillDisplay.isVisible = false
+        options.skillDisplay = SkillRenderer:prepareSkillList(parent, { skillDisplay = options.skillDisplay, skillDisplayGroup = options.skillDisplayGroup, isOffensive = options.isOffensive })
+        options.skillDisplay.y = display.contentHeight - options.skillDisplay.height / 2
+        options.skillDisplayGroup:insert(options.skillDisplay)
+        options.skillDisplay.isVisible = true
+      end
+      return true
+    end)
+    displayGroup.cardSetGroup[v].cardGroup:insert(displayGroup.cardSetGroup[v].cardGroup.cardRemover)
 
     displayGroup.cardSetGroup:insert(displayGroup.cardSetGroup[v].cardGroup)
 
@@ -56,6 +90,112 @@ function SkillRenderer:prepareSkillList(parent, options)
   displayGroup:insert(displayGroup.cardSetGroup)
 
   return displayGroup
+end
+
+function SkillRenderer:updateSkill(skill)
+  local displayGroup = display.newGroup()
+
+  -- BACKGROUND
+  displayGroup.background = display.newRect(displayGroup, 0, 0, display.contentWidth, display.contentHeight)
+  displayGroup.background:setFillColor(0, 0.9) 
+  displayGroup:addEventListener('touch', function(event)
+    if event.phase == 'ended' then
+      displayGroup:removeSelf()
+      displayGroup.isVisible = false
+    end
+    return true
+  end)
+
+  -- CARD INFORMATION
+  displayGroup.infoGroup = display.newGroup()
+  displayGroup.infoGroup.card = display.newRoundedRect(displayGroup.infoGroup, 0, 0, 200, 270, 10)
+  displayGroup.infoGroup.card.fill = {
+    type = 'image', 
+    filename = 'Assets/SkillIcons/Placeholder.png'
+  }  
+  displayGroup.infoGroup.cardName = display.newText(displayGroup.infoGroup, skill.name .. '()', 0, displayGroup.infoGroup.card.y + displayGroup.infoGroup.card.height / 2 + 48, native.systemFont, 36)
+  displayGroup.infoGroup.cardDescription = display.newText({
+    parent = displayGroup.infoGroup, 
+    text = skill.desc, 
+    y = displayGroup.infoGroup.cardName.y + displayGroup.infoGroup.cardName.height / 2 + 100,
+    width = display.contentWidth - 100, 
+    align = 'center',
+    fontSize = 24
+  })
+
+  -- PARAMETERS
+  local index = 1
+  displayGroup.infoGroup.paramSetGroup = display.newGroup()
+  for k, v in pairs(skill.params) do
+    displayGroup.infoGroup.paramSetGroup[k] = display.newGroup()
+    displayGroup.infoGroup.paramSetGroup[k].paramContainer = display.newRoundedRect(displayGroup.infoGroup.paramSetGroup[k], 0, 0, 200, 50, 10)
+    
+    displayGroup.infoGroup.paramSetGroup[k].paramField = native.newTextField(displayGroup.infoGroup.paramSetGroup[k].paramContainer.x, displayGroup.infoGroup.paramSetGroup[k].paramContainer.y, displayGroup.infoGroup.paramSetGroup[k].paramContainer.width, displayGroup.infoGroup.paramSetGroup[k].paramContainer.height)
+    displayGroup.infoGroup.paramSetGroup[k].paramField.placeholder = v
+    displayGroup.infoGroup.paramSetGroup[k].paramField.hasBackground = false
+    displayGroup.infoGroup.paramSetGroup[k]:insert(displayGroup.infoGroup.paramSetGroup[k].paramField)
+
+    displayGroup.infoGroup.paramSetGroup[k].paramText = display.newText({
+      parent = displayGroup.infoGroup.paramSetGroup[k],
+      text = k .. ': ',
+      fontSize = 28
+    })
+    displayGroup.infoGroup.paramSetGroup[k].paramText.x = -(displayGroup.infoGroup.paramSetGroup[k].paramContainer.width / 2) - displayGroup.infoGroup.paramSetGroup[k].paramText.width / 2 - 25
+
+    displayGroup.infoGroup.paramSetGroup[k].y = displayGroup.infoGroup.paramSetGroup[k].height / 2 + (index - 1) * displayGroup.infoGroup.paramSetGroup[k].height + index * 25
+    displayGroup.infoGroup.paramSetGroup:insert(displayGroup.infoGroup.paramSetGroup[k])
+    
+    index = index + 1
+  end
+  displayGroup.infoGroup.paramSetGroup.y = displayGroup.infoGroup.cardDescription.y + displayGroup.infoGroup.cardDescription.height / 2 + 100
+  displayGroup.infoGroup:insert(displayGroup.infoGroup.paramSetGroup)
+
+  displayGroup.infoGroup.y = -(displayGroup.infoGroup.height / 2)
+  displayGroup:insert(displayGroup.infoGroup)
+
+  -- UPDATE BUTTON
+  displayGroup.btn_Equip = ComponentRenderer:renderButton('Assets/Buttons/Btn_Update.png', {
+    filename_clicked = 'Assets/Buttons/Btn_UpdateClicked.png',
+    width = 300, 
+    height = 86,
+  })
+  displayGroup.btn_Equip.x = -(displayGroup.btn_Equip.width / 2 + 25)
+  displayGroup.btn_Equip.y = (display.contentHeight / 2 - displayGroup.btn_Equip.height / 2) - 150
+  displayGroup.btn_Equip:addEventListener('touch', function(event)
+    if event.phase == 'ended' then
+      -- PREPARE PARAMETERS IF ANY
+      local paramKeyValue = nil
+
+      -- HIDE DISPLAY GROUPS
+      for k, v in pairs(skill.params) do
+        skill.params[k] = displayGroup.infoGroup.paramSetGroup[k].paramField.text ~= '' and displayGroup.infoGroup.paramSetGroup[k].paramField.text or v -- TRIM TEXT
+      end
+      displayGroup:removeSelf()
+      displayGroup.isVisible = false
+    end
+    return true
+  end)
+  displayGroup:insert(displayGroup.btn_Equip)
+
+  -- CANCEL BUTTON
+  displayGroup.btn_Cancel = ComponentRenderer:renderButton('Assets/Buttons/Btn_Cancel.png', {
+    filename_clicked = 'Assets/Buttons/Btn_CancelClicked.png',
+    width = 300, 
+    height = 86,
+  })
+  displayGroup.btn_Cancel.x = displayGroup.btn_Cancel.width / 2 + 25
+  displayGroup.btn_Cancel.y = (display.contentHeight / 2 - displayGroup.btn_Cancel.height / 2) - 150
+  displayGroup.btn_Cancel:addEventListener('touch', function(event)
+    if event.phase == 'ended' then 
+      displayGroup:removeSelf()
+      displayGroup.isVisible = false
+    end
+    return true
+  end)
+  displayGroup:insert(displayGroup.btn_Cancel)
+
+  displayGroup.x = display.contentCenterX
+  displayGroup.y = display.contentCenterY  
 end
 
 function SkillRenderer:pickSkill(parent, options)
@@ -90,7 +230,7 @@ function SkillRenderer:pickSkill(parent, options)
 
       local isDisplayed = true
       local skill = {
-        name = skillName, 
+        name = String:filterLetters(skillName), 
         type = String:filterLetters(skillType),
         desc = skillDesc,
       }
@@ -194,7 +334,7 @@ function SkillRenderer:displayCardInformation(parent, skill, options)
       displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramContainer = display.newRoundedRect(displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ], 0, 0, 200, 50, 10)
       
       displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramField = native.newTextField(displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramContainer.x, displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramContainer.y, displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramContainer.width, displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramContainer.height)
-      displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramField.text = paramSplit[2]
+      displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramField.placeholder = paramSplit[2]
       displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramField.hasBackground = false
       displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ]:insert(displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramField)
 
@@ -239,11 +379,13 @@ function SkillRenderer:displayCardInformation(parent, skill, options)
         local param = paramFile:read()
         while param do 
           local paramSplit = String:split(param, ' ')
-          paramKeyValue[ paramSplit[1] ] = displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramField.text
+          paramKeyValue[ paramSplit[1] ] = displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramField.text ~= '' and displayGroup.infoGroup.paramSetGroup[ paramSplit[1] ].paramField.text or paramSplit[2] -- TRIM TEXT
 
           param = paramFile:read()
         end
         io.close(paramFile)
+
+        skill.params = paramKeyValue
       end
       options.parentDisplay.isVisible = false
       displayGroup:removeSelf()

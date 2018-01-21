@@ -86,6 +86,8 @@ function EventRenderer:prepareEventList(parent)
             yScale = 1.1, 
             time = 50, 
             onComplete = function() 
+              display.newRect(displayGroup.skillView, 0, 0, display.contentWidth, display.contentHeight * 0.15)
+              
               displayGroup.activeEvent = k
               displayGroup.skillView.isVisible = false
               displayGroup.skillView = SkillRenderer:prepareSkillList(parent.eventSet[displayGroup.activeEvent].skillSet, { skillDisplay = displayGroup.skillView, skillDisplayGroup = displayGroup, isOffensive = v.isOffensive })

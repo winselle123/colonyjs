@@ -45,6 +45,71 @@ function Guardian:new(class)
       isStart = true
     }) 
 
+    -- RECURSIVE FUNCTIONS
+    guardian.walkUp = function(steps, callback, options) 
+      -- LOOK FOR OPTIONS
+      if options and options.isStart then
+        guardian.view.sprite.animate('WalkingRight')
+      end
+
+      if tonumber(steps) <= 0 then
+        guardian.view.sprite.animate('StandingRight')
+        callback()
+        return
+      else
+        guardian.y = guardian.y - 1
+        timer.performWithDelay(10, function() guardian.walkUp(steps - 1, callback) end)
+      end
+    end
+
+    guardian.walkRight = function(steps, callback, options) 
+      -- LOOK FOR OPTIONS
+      if options and options.isStart then
+        guardian.view.sprite.animate('WalkingRight')
+      end
+
+      if tonumber(steps) <= 0 then
+        guardian.view.sprite.animate('StandingRight')
+        callback()
+        return
+      else
+        guardian.x = guardian.x + 1
+        timer.performWithDelay(10, function() guardian.walkRight(steps - 1, callback) end)
+      end
+    end
+
+    guardian.walkDown = function(steps, callback, options) 
+      -- LOOK FOR OPTIONS
+      if options and options.isStart then
+        guardian.view.sprite.animate('WalkingRight')
+      end
+
+      if tonumber(steps) <= 0 then
+        guardian.view.sprite.animate('StandingRight')
+        callback()
+        return
+      else
+        guardian.y = guardian.y + 1
+        timer.performWithDelay(10, function() guardian.walkDown(steps - 1, callback) end)
+      end
+    end
+
+    guardian.walkLeft = function(steps, callback, options) 
+      -- LOOK FOR OPTIONS
+      if options and options.isStart then
+        guardian.view.sprite.animate('WalkingLeft')
+      end
+
+      if tonumber(steps) <= 0 then
+        guardian.view.sprite.animate('StandingLeft')
+        callback()
+        return
+      else
+        guardian.x = guardian.x - 1
+        timer.performWithDelay(10, function() guardian.walkLeft(steps - 1, callback) end)
+      end
+    end
+
     guardian.destroy = function() 
       -- REMOVE GUARDIANS FROM GAME OBJECTS
       local index = 0

@@ -2,6 +2,8 @@ local String = require('Classes.System.String')
 local GameObject = require('Classes.System.GameObject')
 local Panel = require('Classes.System.Panel')
 
+local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
+
 local Guardian = require('Classes.Game.Guardian')
 
 local Game = {
@@ -81,13 +83,32 @@ function Game:prepare()
     pickerGroup.pickerScroll.isVisible = false
   end 
 
+  -- BUTTON FOR GOING TO BATTLE
+  local btn_Battle = ComponentRenderer:renderButton('Assets/Buttons/Btn_Play.png', { 
+    filename_clicked = 'Assets/Buttons/Btn_PlayClicked.png',
+    width = 300, 
+    height = 86
+  })
+  btn_Battle.x = display.contentCenterX 
+  btn_Battle.y = btn_Battle.height / 2 + 25
+  btn_Battle:addEventListener('touch', function(event)
+    if event.phase == 'ended' then
+      pickerGroup.isVisible = false
+      btn_Battle.isVisible = false
+      Game:battle()
+    end
+    return true
+  end)
+
   pickerGroup.x = pickerGroup.header.width / 2 + 25
   pickerGroup.y = pickerGroup.header.height / 2 + 25
   table.insert(Panel.panelSet, pickerGroup)
 end
 
 function Game:battle() 
-
+  for i, v in ipairs(Guardian.guardianSet) do
+    v.events.execute('onStart')
+  end
 end
 
 return Game

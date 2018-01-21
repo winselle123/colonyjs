@@ -38,6 +38,27 @@ function Event:newSet(parent)
     v.view = EventRenderer:prepareEventPanel(v)
   end
 
+  events.execute = function(name, index)
+    local index = index and index or 1
+    local executable = events.eventSet[name].skillSet[index]
+
+    -- MOVEMENT ACTIONS
+    if index <= #events.eventSet[name].skillSet then
+      if executable.name == 'moveLeft' then
+        parent.walkLeft(executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
+      end
+      if executable.name == 'moveRight' then
+        parent.walkRight(executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
+      end
+      if executable.name == 'moveUp' then
+        parent.walkUp(executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
+      end
+      if executable.name == 'moveDown' then
+        parent.walkDown(executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
+      end
+    end
+  end
+
   return events
 end
 
