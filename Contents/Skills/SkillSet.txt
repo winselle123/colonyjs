@@ -1,0 +1,30 @@
+moveLeft
+movement
+Moves the guardian to the left
+moveRight
+movement
+Moves the guardian to the right
+moveUp
+movement
+Moves the guardian upward
+moveDown
+movement 
+Moves the guardian downward
+attack
+offense
+Attacks the focused enemy
+barrageAttack
+offense
+Sends a flurry of weak attacks to the focused enemy
+chargedAttack
+offense
+Charges three seconds and powerfully attacks the enemy 
+shield
+defense
+Shields the guardian
+chargedShield
+defense
+Charges for a second and powerfully shields the guardian
+chargedShieldField
+defense
+Charges three seconds and creates a defensive field within the guardian

@@ -60,7 +60,11 @@ function String:split(self, delimiter)
   end
   table.insert(result, string.sub(self, from))
   
-return result
+  return result
+end
+
+function String:toTitleCase(self)
+  return string.gsub(" " .. self, "%W%l", string.upper):sub(2)
 end
 
 return String

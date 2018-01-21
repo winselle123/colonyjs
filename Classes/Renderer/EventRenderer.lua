@@ -4,9 +4,7 @@ local Widget = require('widget')
 local SkillRenderer = require('Classes.Renderer.SkillRenderer')
 local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
 
-local EventRenderer = {
-  activeEvent = 'onStart'
-}
+local EventRenderer = {}
 
 function EventRenderer:prepareEventPanel(parent)
   local eventGroup = display.newGroup() 
@@ -46,9 +44,13 @@ end
 
 function EventRenderer:prepareEventList(parent)
   local displayGroup = display.newGroup()
+  displayGroup.activeEvent = nil
 
   -- SKILL VIEW 
-  displayGroup.skillView = SkillRenderer:prepareSkillList(parent.eventSet[EventRenderer.activeEvent])
+  displayGroup.skillView = display.newGroup()
+  displayGroup.skillView.skillContainer = display.newRect(displayGroup.skillView, 0, 0, display.contentWidth, display.contentHeight * 0.15)
+  displayGroup.skillView.skillText = display.newText(displayGroup.skillView, 'No selected event', 0, 0, native.systemFont, 24)
+  displayGroup.skillView.skillText:setFillColor(0)
   displayGroup.skillView.y = display.contentHeight - displayGroup.skillView.height / 2
   displayGroup:insert(displayGroup.skillView)
 
@@ -71,22 +73,22 @@ function EventRenderer:prepareEventList(parent)
     v.view:addEventListener('touch', function(event) 
       if event.phase == 'began' then
         -- ALLOWS ONE EVENT TO BE SELECTED
-        if v ~= parent.eventSet[EventRenderer.activeEvent] then
-          transition.to(parent.eventSet[EventRenderer.activeEvent].view, {
-            xScale = 1, 
-            yScale = 1, 
-            time = 50, 
-            onComplete = function() 
-              EventRenderer.activeEvent = k
-            end
-          })
+        if v ~= parent.eventSet[displayGroup.activeEvent] then
+          if displayGroup.activeEvent then
+            transition.to(parent.eventSet[displayGroup.activeEvent].view, {
+              xScale = 1, 
+              yScale = 1, 
+              time = 50
+            })
+          end
           transition.to(v.view, {
             xScale = 1.1,
             yScale = 1.1, 
             time = 50, 
             onComplete = function() 
+              displayGroup.activeEvent = k
               displayGroup.skillView.isVisible = false
-              displayGroup.skillView = SkillRenderer:prepareSkillList(parent.eventSet[EventRenderer.activeEvent])
+              displayGroup.skillView = SkillRenderer:prepareSkillList(parent.eventSet[displayGroup.activeEvent].skillSet, { skillDisplay = displayGroup.skillView, skillDisplayGroup = displayGroup, isOffensive = v.isOffensive })
               displayGroup.skillView.y = display.contentHeight - displayGroup.skillView.height / 2
               displayGroup:insert(displayGroup.skillView)
             end
@@ -95,11 +97,6 @@ function EventRenderer:prepareEventList(parent)
       end
     end)
     index = index + 1
-
-    -- ENLARGE IF ACTIVE EVENT
-    if v == parent.eventSet[EventRenderer.activeEvent] then
-      v.view.xScale, v.view.yScale = 1.1, 1.1
-    end
 
     displayGroup.eventList:insert(v.view)
   end
