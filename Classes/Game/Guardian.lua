@@ -36,7 +36,7 @@ function Guardian:new(class)
     guardian.x = display.contentCenterX
     guardian.y = display.contentCenterY
 
-    guardian.events = Event:newSet(guardian)
+    timer.performWithDelay(10, function() guardian.events = Event:newSet(guardian) end)
 
     guardian.info = GuardianRenderer:prepareInfo(guardian)
     guardian.view = GuardianRenderer:prepare(guardian, {
@@ -45,7 +45,7 @@ function Guardian:new(class)
       isStart = true
     }) 
 
-    -- RECURSIVE FUNCTIONS
+    -- RECURSIVE FUNCTIONS WITH CALLBACK FUNCTIONS
     guardian.walkUp = function(steps, callback, options) 
       -- LOOK FOR OPTIONS
       if options and options.isStart then
@@ -108,6 +108,16 @@ function Guardian:new(class)
         guardian.x = guardian.x - 1
         timer.performWithDelay(10, function() guardian.walkLeft(steps - 1, callback) end)
       end
+    end
+
+    guardian.wonder = function(callback, options) 
+      -- LOOK FOR OPTIONS
+      if options and options.isStart then
+        guardian.view.sprite.animate('WalkingLeft')
+      end
+
+      timer.performWithDelay(2000, function() callback() end)
+      return
     end
 
     guardian.destroy = function() 

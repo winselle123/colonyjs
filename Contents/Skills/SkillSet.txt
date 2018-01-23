@@ -10,6 +10,39 @@ Moves the guardian upward
 moveDown
 movement 
 Moves the guardian downward
+moveToXY
+movement
+Moves the guardian in certain x and y in the map
+moveToX
+movement
+Moves the guardian in certain x in the map without changing the y
+moveToY
+movement
+Moves the guardian in certain y in the map without changing the x
+dashLeft
+movement
+Dashes shortly to the left
+dashRight
+movement
+Dashes shortly to the right
+dashUp
+movement
+Dashes shortly upward
+dashDown
+movement
+Dashes shortly downward
+launchLeft
+movement
+Charges for one second and launches to the left
+launchRight
+movement
+Charges for one second and launches to the right
+launchUp
+movement
+Charges for one second and launches upward
+launchDown
+movement
+Charges for one second and launches downward
 attack
 offense
 Attacks the focused enemy
@@ -18,7 +51,16 @@ offense
 Sends a flurry of weak attacks to the focused enemy
 chargedAttack
 offense
-Charges three seconds and powerfully attacks the enemy 
+Charges three seconds and powerfully attacks the enemy
+piercingAttack
+offense
+Sends a number of weak piercing attacks
+conedAttack
+offense
+Sends three weak attacks that travels in a cone
+spinAttack
+offense
+Charges one second and attacks in a spinning manner 
 shield
 defense
 Shields the guardian
@@ -28,3 +70,15 @@ Charges for a second and powerfully shields the guardian
 chargedShieldField
 defense
 Charges three seconds and creates a defensive field within the guardian
+protect
+defense
+Sends a weak shield to a targeted ally
+repeatFromCard
+misc
+Repeats the whole process from the card specified
+random
+misc
+Serves as a placeholder for a random card
+doNothing
+misc
+Typically what it says

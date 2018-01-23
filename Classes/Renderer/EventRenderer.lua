@@ -1,4 +1,4 @@
-local Panel = require('Classes.System.Panel')
+local DisplayObject = require('Classes.System.DisplayObject')
 
 local Widget = require('widget')
 local SkillRenderer = require('Classes.Renderer.SkillRenderer')
@@ -133,7 +133,7 @@ function EventRenderer:prepareEventList(parent)
 
   displayGroup.x = display.contentCenterX
   displayGroup.isVisible = false
-  table.insert(Panel.panelSet, displayGroup)
+  table.insert(DisplayObject.displayObjectSet, displayGroup)
   return displayGroup
 end
 

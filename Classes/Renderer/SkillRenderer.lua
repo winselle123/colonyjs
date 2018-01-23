@@ -1,6 +1,7 @@
 local Widget = require('widget')
 
 local String = require('Classes.System.String')
+local DisplayObject = require('Classes.System.DisplayObject')
 local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
 
 local SkillRenderer = {}
@@ -89,6 +90,7 @@ function SkillRenderer:prepareSkillList(parent, options)
   displayGroup.cardSetGroup.x = -(display.contentWidth / 2)
   displayGroup:insert(displayGroup.cardSetGroup)
 
+  table.insert(DisplayObject.displayObjectSet, displayGroup)
   return displayGroup
 end
 
@@ -196,6 +198,8 @@ function SkillRenderer:updateSkill(skill)
 
   displayGroup.x = display.contentCenterX
   displayGroup.y = display.contentCenterY  
+
+  table.insert(DisplayObject.displayObjectSet, displayGroup)
 end
 
 function SkillRenderer:pickSkill(parent, options)
@@ -228,38 +232,30 @@ function SkillRenderer:pickSkill(parent, options)
     while skillName do
       if not skillName then break end
 
-      local isDisplayed = true
       local skill = {
         name = String:filterLetters(skillName), 
         type = String:filterLetters(skillType),
         desc = skillDesc,
       }
 
-      -- DO NOT SHOW ATTACK IF NOT IS OFFENSIVE
-      if skill.type == 'offense' then
-        isDisplayed = options.isOffensive
-      end
+      local card = display.newRoundedRect(0, 0, 130, 175, 10)
+      card.fill = {
+        type = 'image', 
+        filename = 'Assets/SkillIcons/Placeholder.png'
+      }
+      card.x = card.width / 2 + (xIndex - 1) * card.width + xIndex * 50
+      card.y = card.height / 2 + (yIndex - 1) * card.height + yIndex * 50
+      card:addEventListener('touch', function(event) 
+        if event.phase == 'ended' then
+          options.parentDisplay = displayGroup
+          SkillRenderer:displayCardInformation(parent, skill, options)
+        end
+        return true
+      end) 
+      displayGroup.cardPicker:insert(card)
 
-      if isDisplayed then
-        local card = display.newRoundedRect(0, 0, 130, 175, 10)
-        card.fill = {
-          type = 'image', 
-          filename = 'Assets/SkillIcons/Placeholder.png'
-        }
-        card.x = card.width / 2 + (xIndex - 1) * card.width + xIndex * 50
-        card.y = card.height / 2 + (yIndex - 1) * card.height + yIndex * 50
-        card:addEventListener('touch', function(event) 
-          if event.phase == 'ended' then
-            options.parentDisplay = displayGroup
-            SkillRenderer:displayCardInformation(parent, skill, options)
-          end
-          return true
-        end) 
-        displayGroup.cardPicker:insert(card)
-
-        yIndex = xIndex >= 4 and yIndex + 1 or yIndex 
-        xIndex = xIndex >= 4 and 1 or xIndex + 1
-      end
+      yIndex = xIndex >= 4 and yIndex + 1 or yIndex 
+      xIndex = xIndex >= 4 and 1 or xIndex + 1
 
       skillName, skillType, skillDesc = skillFile:read(), skillFile:read(), skillFile:read()
     end
@@ -284,6 +280,8 @@ function SkillRenderer:pickSkill(parent, options)
 
   displayGroup.x = display.contentCenterX
   displayGroup.y = display.contentCenterY
+
+  table.insert(DisplayObject.displayObjectSet, displayGroup)
 end
 
 function SkillRenderer:displayCardInformation(parent, skill, options)
@@ -424,6 +422,8 @@ function SkillRenderer:displayCardInformation(parent, skill, options)
 
   displayGroup.x = display.contentCenterX
   displayGroup.y = display.contentCenterY
+  
+  table.insert(DisplayObject.displayObjectSet, displayGroup)
 end
 
 return SkillRenderer

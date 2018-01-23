@@ -1,6 +1,6 @@
 local String = require('Classes.System.String')
 local GameObject = require('Classes.System.GameObject')
-local Panel = require('Classes.System.Panel')
+local DisplayObject = require('Classes.System.DisplayObject')
 
 local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
 
@@ -33,12 +33,12 @@ function Game:_destroy()
   GameObject.gameObjectSet = {}
 
   -- DESTROY ALL PANELS
-  for i, v in ipairs(Panel.panelSet) do
+  for i, v in ipairs(DisplayObject.displayObjectSet) do
     v:removeSelf()
     v.isVisible = false
   end
-  for i, v in ipairs(Panel.panelSet) do v = nil end
-  Panel.panelSet = {}
+  for i, v in ipairs(DisplayObject.displayObjectSet) do v = nil end
+  DisplayObject.displayObjectSet = {}
 end
 
 function Game:prepare()
@@ -99,10 +99,11 @@ function Game:prepare()
     end
     return true
   end)
+  table.insert(DisplayObject.displayObjectSet, btn_Battle)
 
   pickerGroup.x = pickerGroup.header.width / 2 + 25
   pickerGroup.y = pickerGroup.header.height / 2 + 25
-  table.insert(Panel.panelSet, pickerGroup)
+  table.insert(DisplayObject.displayObjectSet, pickerGroup)
 end
 
 function Game:battle() 

@@ -1,4 +1,4 @@
-local Panel = require('Classes.System.Panel')
+local DisplayObject = require('Classes.System.DisplayObject')
 local SpriteRenderer = require('Classes.Renderer.SpriteRenderer')
 local EventRenderer = require('Classes.Renderer.EventRenderer')
 
@@ -165,7 +165,7 @@ parent.desc .. '\n\n' ..
   end)
   windowGroup:insert(infoGroup)
 
-  table.insert(Panel.panelSet, windowGroup)
+  table.insert(DisplayObject.displayObjectSet, windowGroup)
   windowGroup.isVisible = false
   return windowGroup
 end

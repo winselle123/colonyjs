@@ -44,6 +44,13 @@ function Event:newSet(parent)
 
     -- MOVEMENT ACTIONS
     if index <= #events.eventSet[name].skillSet then
+      -- VALIDATION 1) IF OFFENSE CARD AND NOT OFFENSE EVENT THEN WONDER
+      if executable.type == 'offense' and events.eventSet[name].isOffensive then
+        parent.wonder(function() parent.events.execute(name, index + 1) end)
+        return
+      end
+
+      -- EXECUTE IF NO ERROR
       if executable.name == 'moveLeft' then
         parent.walkLeft(executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
       end
