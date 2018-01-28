@@ -19,10 +19,6 @@ local Game = {
 }
 
 function Game:_init()
-  -- INITIALIZE BACKGROUND 
-  Game.background = display.newImageRect('Assets/Backgrounds/Grass.png', display.contentWidth, display.contentHeight)
-  Game.background.x, Game.background.y = display.contentCenterX, display.contentCenterY
-
   -- INITIALIZE DRAW TIMER/RENDER TIMER
   timer.performWithDelay(1, function()
     for i, v in ipairs(GameObject.gameObjectSet) do
@@ -36,10 +32,6 @@ end
 
 function Game:_destroy() 
   -- SAVE PROGRESS
-
-  -- DESTROY BACKGROUND
-  Game.background.isVisible = false
-  Game.background = nil
 
   -- EMPTY COLLIDABLE SET
   for i, v in ipairs(Collision.collisionObjectSet) do v = nil end

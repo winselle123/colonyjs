@@ -10,22 +10,6 @@ function scene:create( event )
 
   local sceneGroup = self.view
   -- Code here runs when the scene is first created but has not yet appeared on screen
-
-  local placeholder = display.newText('Battle proper', display.contentCenterX, display.contentCenterY, native.systemFont, 24)
-  sceneGroup:insert(placeholder)
-
-  local btn_OptionsBattle = ComponentRenderer:renderButton('Assets/Buttons/Btn_Settings.png', {
-    filename_clicked = 'Assets/Buttons/Btn_SettingsClicked.png',
-    width = 86, 
-    height = 86,
-  })
-  btn_OptionsBattle:addEventListener('touch', function(event)
-    if event.phase == 'ended' then
-      composer.gotoScene('Classes.Scenes.OptionsBattle')
-    end
-  end)
-  btn_OptionsBattle.x, btn_OptionsBattle.y = (display.contentWidth - btn_OptionsBattle.width / 2) - 25, (btn_OptionsBattle.height / 2) + 25
-  sceneGroup:insert(btn_OptionsBattle)
 end
 
 -- show()
@@ -38,6 +22,27 @@ function scene:show( event )
     -- Code here runs when the scene is still off screen (but is about to come on screen)
     Game.sceneActivated = 'Battle proper'
     Game:_init()
+
+    -- INITIALIZE BACKGROUND 
+    local background = display.newImageRect('Assets/Backgrounds/Grass.png', display.contentWidth, display.contentHeight)
+    background.x, background.y = display.contentCenterX, display.contentCenterY
+    sceneGroup:insert(background)
+
+    local placeholder = display.newText('Battle proper', display.contentCenterX, display.contentCenterY, native.systemFont, 24)
+    sceneGroup:insert(placeholder)
+
+    local btn_OptionsBattle = ComponentRenderer:renderButton('Assets/Buttons/Btn_Settings.png', {
+      filename_clicked = 'Assets/Buttons/Btn_SettingsClicked.png',
+      width = 86, 
+      height = 86,
+    })
+    btn_OptionsBattle:addEventListener('touch', function(event)
+      if event.phase == 'ended' then
+        composer.gotoScene('Classes.Scenes.OptionsBattle')
+      end
+    end)
+    btn_OptionsBattle.x, btn_OptionsBattle.y = (display.contentWidth - btn_OptionsBattle.width / 2) - 25, (btn_OptionsBattle.height / 2) + 25
+    sceneGroup:insert(btn_OptionsBattle)
 
   elseif ( phase == "did" ) then
     -- Code here runs when the scene is entirely on screen
