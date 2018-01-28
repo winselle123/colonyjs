@@ -1,10 +1,13 @@
 local EventRenderer = require('Classes.Renderer.EventRenderer')
 local Skill = require('Classes.Game.Skill')
 
-local Event = {} 
+local Event = {
+  isExecutable = true
+} 
 
 function Event:newSet(parent) 
   local events = {
+    parent = parent,
     eventSet = {
       ['onStart'] = {
         isOffensive = false, 
@@ -38,30 +41,112 @@ function Event:newSet(parent)
     v.view = EventRenderer:prepareEventPanel(v)
   end
 
+  events.eventExecuted = nil
   events.execute = function(name, index)
-    local index = index and index or 1
-    local executable = events.eventSet[name].skillSet[index]
+    if not events.parent.isDestroyed then
+      -- PRIORITIZATION OF EVENTS
+      local priority = { 'onGuardianStoneAttacked', 'onEnemySeen', 'onAllySeen', 'onLowHealth', 'onIdle', 'onStart' }
+      for i, v in ipairs(priority) do
+        if v == name or v == events.eventExecuted then 
+          if #events.eventSet[v].skillSet ~= 0 then
+            events.eventExecuted = v
+            break
+          end
+        end   
+      end 
 
-    -- MOVEMENT ACTIONS
-    if index <= #events.eventSet[name].skillSet then
-      -- VALIDATION 1) IF OFFENSE CARD AND NOT OFFENSE EVENT THEN WONDER
-      if executable.type == 'offense' and events.eventSet[name].isOffensive then
-        parent.wonder(function() parent.events.execute(name, index + 1) end)
-        return
-      end
+      if name == events.eventExecuted then 
+        local index = index and index or 1
+        local executable = events.eventSet[name].skillSet[index]
 
-      -- EXECUTE IF NO ERROR
-      if executable.name == 'moveLeft' then
-        parent.walkLeft(executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
-      end
-      if executable.name == 'moveRight' then
-        parent.walkRight(executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
-      end
-      if executable.name == 'moveUp' then
-        parent.walkUp(executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
-      end
-      if executable.name == 'moveDown' then
-        parent.walkDown(executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
+        -- MOVEMENT ACTIONS
+        if index <= #events.eventSet[name].skillSet then
+          -- VALIDATION 1) IF OFFENSE CARD AND NOT OFFENSE EVENT THEN WONDER
+          if executable.type == 'offense' then
+            if not events.eventSet[name].isOffensive then
+              parent.wonder(function() parent.events.execute(name, index + 1) end)
+              return
+            end
+          end
+
+          -- EXECUTE IF NO ERROR
+          local executableSet = {
+            ['moveLeft'] = function() 
+              parent.move(parent.x - executable.params.steps, parent.y, function() parent.events.execute(name, index + 1) end, { isStart = true }) 
+            end, 
+            ['moveRight'] = function()
+              parent.move(parent.x + executable.params.steps, parent.y, function() parent.events.execute(name, index + 1) end, { isStart = true })
+            end,
+            ['moveUp'] = function()
+              parent.move(parent.x, parent.y - executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })
+            end,
+            ['moveDown'] = function()
+              parent.move(parent.x, parent.y + executable.params.steps, function() parent.events.execute(name, index + 1) end, { isStart = true })        
+            end, 
+            ['dashLeft'] = function()
+              parent.dash(function() parent.events.execute(name, index + 1) end, { isStart = true, direction = 'left' })
+            end, 
+            ['dashRight'] = function()
+              parent.dash(function() parent.events.execute(name, index + 1) end, { isStart = true, direction = 'right' })
+            end, 
+            ['dashUp'] = function()
+              parent.dash(function() parent.events.execute(name, index + 1) end, { isStart = true, direction = 'up' })
+            end, 
+            ['dashDown'] = function()
+              parent.dash(function() parent.events.execute(name, index + 1) end, { isStart = true, direction = 'down' })
+            end, 
+            ['launchLeft'] = function()
+              parent.launch(function() parent.events.execute(name, index + 1) end, { isStart = true, direction = 'left' })
+            end, 
+            ['launchRight'] = function()
+              parent.launch(function() parent.events.execute(name, index + 1) end, { isStart = true, direction = 'right' })
+            end, 
+            ['launchUp'] = function()
+              parent.launch(function() parent.events.execute(name, index + 1) end, { isStart = true, direction = 'up' })
+            end, 
+            ['launchDown'] = function()
+              parent.launch(function() parent.events.execute(name, index + 1) end, { isStart = true, direction = 'down' })
+            end,
+            ['moveToX'] = function()
+              parent.move(executable.params.xCoordinate, parent.y, function() parent.events.execute(name, index + 1) end, { isStart = true })
+            end,
+            ['moveToY'] = function()
+              parent.move(parent.x, executable.params.yCoordinate, function() parent.events.execute(name, index + 1) end, { isStart = true })
+            end,
+            ['attack'] = function()
+              if parent.target.health > 0 then
+                parent.attackEnemy(events.eventSet[name].target, function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end)
+              else
+                parent.wonder(function() parent.events.execute(name, index + 1) end)
+              end
+            end,
+            ['chargedAttack'] = function()
+              if parent.target.health > 0 then
+                parent.attackEnemy(events.eventSet[name].target, function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end, { charged = true })
+              else
+                parent.wonder(function() parent.events.execute(name, index + 1) end)
+              end
+            end,
+            ['poisonedAttack'] = function()
+              if parent.target.health > 0 then
+                parent.attackEnemy(events.eventSet[name].target, function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end, { poisoned = true })
+              else
+                parent.wonder(function() parent.events.execute(name, index + 1) end)
+              end
+            end,
+            ['repeat'] = function()
+              parent.events.execute(name)
+            end,
+            ['doNothing'] = function()
+              timer.performWithDelay(parent.slackTime * 1000, parent.events.execute(name, index + 1))
+            end
+          }
+
+          if executableSet[executable.name] then executableSet[executable.name]() end
+        else
+          events.eventExecuted = nil
+          parent.target = nil
+        end
       end
     end
   end

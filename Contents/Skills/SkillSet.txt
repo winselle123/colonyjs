@@ -10,9 +10,6 @@ Moves the guardian upward
 moveDown
 movement 
 Moves the guardian downward
-moveToXY
-movement
-Moves the guardian in certain x and y in the map
 moveToX
 movement
 Moves the guardian in certain x in the map without changing the y
@@ -46,36 +43,27 @@ Charges for one second and launches downward
 attack
 offense
 Attacks the focused enemy
-barrageAttack
-offense
-Sends a flurry of weak attacks to the focused enemy
 chargedAttack
 offense
-Charges three seconds and powerfully attacks the enemy
-piercingAttack
+Charges and powerfully attacks the enemy
+poisonedAttack
 offense
-Sends a number of weak piercing attacks
-conedAttack
-offense
-Sends three weak attacks that travels in a cone
-spinAttack
-offense
-Charges one second and attacks in a spinning manner 
+Sends a weak attack to the enemy and poisons them for a brief amount of second
 shield
 defense
 Shields the guardian
 chargedShield
 defense
-Charges for a second and powerfully shields the guardian
+Charges and powerfully shields the guardian
 chargedShieldField
 defense
-Charges three seconds and creates a defensive field within the guardian
+Charges and creates a defensive field within the guardian
 protect
 defense
 Sends a weak shield to a targeted ally
-repeatFromCard
+repeat
 misc
-Repeats the whole process from the card specified
+Repeats the whole process from the starting card
 random
 misc
 Serves as a placeholder for a random card

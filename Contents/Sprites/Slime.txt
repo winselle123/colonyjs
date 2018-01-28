@@ -1,0 +1,44 @@
+192
+256
+start
+Drop 450 1
+105 43 14 16
+137 46 14 13
+8 48 16 11
+end
+start
+StandingLeft 0 1
+8 48 16 11
+end
+start
+StandingRight 0 1
+8 48 16 11
+end
+start
+StandingUp 0 1
+8 48 16 11
+end
+start
+StandingDown 0 1
+8 48 16 11
+end
+start
+WalkingLeft 300 0
+73 176 17 11
+105 176 17 11
+end
+start
+WalkingRight 300 0
+70 240 17 11
+102 240 17 11
+end
+start
+WalkingUp 300 0
+70 240 17 11
+102 240 17 11
+end
+start
+WalkingDown 300 0
+70 240 17 11
+102 240 17 11
+end

@@ -1,3 +1,5 @@
+local SpriteRenderer = require('Classes.Renderer.SpriteRenderer')
+
 local ComponentRenderer = {}
 
 function ComponentRenderer:renderButton(filename, attributes)
@@ -31,6 +33,20 @@ function ComponentRenderer:renderButton(filename, attributes)
   buttonGroup.x = attributes.x and attributes.x or 0
   buttonGroup.y = attributes.y and attributes.y or 0
   return buttonGroup
+end
+
+function ComponentRenderer:renderClicker(x, y)
+  local touch = { class = 'Touch' }
+  local ripple = SpriteRenderer:draw(touch)
+  ripple:addEventListener('sprite', function(event) 
+    if event.phase == 'ended' then
+      ripple.isVisible = false
+      ripple = nil
+    end
+  end)
+  ripple.xScale, ripple.yScale = 1.5, 1.5
+  ripple.x, ripple.y = x, y
+  ripple.animate('Ripple')
 end
 
 return ComponentRenderer

@@ -2,7 +2,6 @@ local Game = require('Classes.System.Game')
 
 local composer = require('composer')
 composer.gotoScene('Classes.Scenes.MainMenu')
-
 Runtime:addEventListener('key', function(event) 
   if event.keyName == 'back' and event.phase == 'up' then 
     local backActions = {
@@ -41,5 +40,14 @@ Runtime:addEventListener('key', function(event)
     return false
   end
 end) 
+
+-- RIPPLE TOUCH
+local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
+Runtime:addEventListener('touch', function(event)
+  if event.phase == 'began' then
+    ComponentRenderer:renderClicker(event.x, event.y)
+  end
+end)
+
 
 system.setIdleTimer(false)

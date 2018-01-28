@@ -126,31 +126,33 @@ function SkillRenderer:updateSkill(skill)
   })
 
   -- PARAMETERS
-  local index = 1
-  displayGroup.infoGroup.paramSetGroup = display.newGroup()
-  for k, v in pairs(skill.params) do
-    displayGroup.infoGroup.paramSetGroup[k] = display.newGroup()
-    displayGroup.infoGroup.paramSetGroup[k].paramContainer = display.newRoundedRect(displayGroup.infoGroup.paramSetGroup[k], 0, 0, 200, 50, 10)
-    
-    displayGroup.infoGroup.paramSetGroup[k].paramField = native.newTextField(displayGroup.infoGroup.paramSetGroup[k].paramContainer.x, displayGroup.infoGroup.paramSetGroup[k].paramContainer.y, displayGroup.infoGroup.paramSetGroup[k].paramContainer.width, displayGroup.infoGroup.paramSetGroup[k].paramContainer.height)
-    displayGroup.infoGroup.paramSetGroup[k].paramField.placeholder = v
-    displayGroup.infoGroup.paramSetGroup[k].paramField.hasBackground = false
-    displayGroup.infoGroup.paramSetGroup[k]:insert(displayGroup.infoGroup.paramSetGroup[k].paramField)
+  if skill.params then
+    local index = 1
+    displayGroup.infoGroup.paramSetGroup = display.newGroup()
+    for k, v in pairs(skill.params) do
+      displayGroup.infoGroup.paramSetGroup[k] = display.newGroup()
+      displayGroup.infoGroup.paramSetGroup[k].paramContainer = display.newRoundedRect(displayGroup.infoGroup.paramSetGroup[k], 0, 0, 200, 50, 10)
+      
+      displayGroup.infoGroup.paramSetGroup[k].paramField = native.newTextField(displayGroup.infoGroup.paramSetGroup[k].paramContainer.x, displayGroup.infoGroup.paramSetGroup[k].paramContainer.y, displayGroup.infoGroup.paramSetGroup[k].paramContainer.width, displayGroup.infoGroup.paramSetGroup[k].paramContainer.height)
+      displayGroup.infoGroup.paramSetGroup[k].paramField.placeholder = v
+      displayGroup.infoGroup.paramSetGroup[k].paramField.hasBackground = false
+      displayGroup.infoGroup.paramSetGroup[k]:insert(displayGroup.infoGroup.paramSetGroup[k].paramField)
 
-    displayGroup.infoGroup.paramSetGroup[k].paramText = display.newText({
-      parent = displayGroup.infoGroup.paramSetGroup[k],
-      text = k .. ': ',
-      fontSize = 28
-    })
-    displayGroup.infoGroup.paramSetGroup[k].paramText.x = -(displayGroup.infoGroup.paramSetGroup[k].paramContainer.width / 2) - displayGroup.infoGroup.paramSetGroup[k].paramText.width / 2 - 25
+      displayGroup.infoGroup.paramSetGroup[k].paramText = display.newText({
+        parent = displayGroup.infoGroup.paramSetGroup[k],
+        text = k .. ': ',
+        fontSize = 28
+      })
+      displayGroup.infoGroup.paramSetGroup[k].paramText.x = -(displayGroup.infoGroup.paramSetGroup[k].paramContainer.width / 2) - displayGroup.infoGroup.paramSetGroup[k].paramText.width / 2 - 25
 
-    displayGroup.infoGroup.paramSetGroup[k].y = displayGroup.infoGroup.paramSetGroup[k].height / 2 + (index - 1) * displayGroup.infoGroup.paramSetGroup[k].height + index * 25
-    displayGroup.infoGroup.paramSetGroup:insert(displayGroup.infoGroup.paramSetGroup[k])
-    
-    index = index + 1
+      displayGroup.infoGroup.paramSetGroup[k].y = displayGroup.infoGroup.paramSetGroup[k].height / 2 + (index - 1) * displayGroup.infoGroup.paramSetGroup[k].height + index * 25
+      displayGroup.infoGroup.paramSetGroup:insert(displayGroup.infoGroup.paramSetGroup[k])
+      
+      index = index + 1
+    end
+    displayGroup.infoGroup.paramSetGroup.y = displayGroup.infoGroup.cardDescription.y + displayGroup.infoGroup.cardDescription.height / 2 + 100
+    displayGroup.infoGroup:insert(displayGroup.infoGroup.paramSetGroup)
   end
-  displayGroup.infoGroup.paramSetGroup.y = displayGroup.infoGroup.cardDescription.y + displayGroup.infoGroup.cardDescription.height / 2 + 100
-  displayGroup.infoGroup:insert(displayGroup.infoGroup.paramSetGroup)
 
   displayGroup.infoGroup.y = -(displayGroup.infoGroup.height / 2)
   displayGroup:insert(displayGroup.infoGroup)
