@@ -30,16 +30,22 @@ movement
 Dashes shortly downward
 launchLeft
 movement
-Charges for one second and launches to the left
+Charges and launches to the left
 launchRight
 movement
-Charges for one second and launches to the right
+Charges and launches to the right
 launchUp
 movement
-Charges for one second and launches upward
+Charges and launches upward
 launchDown
 movement
-Charges for one second and launches downward
+Charges and launches downward
+teleportToStone
+movement
+Charges and teleports the guardian back to the guardian stone
+teleportToEnemy
+offense
+Charges and teleports the guardian to the focused enemy
 attack
 offense
 Attacks the focused enemy

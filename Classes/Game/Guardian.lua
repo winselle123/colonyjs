@@ -40,6 +40,7 @@ function Guardian:new(class)
       isDestroyed = false,
       hasChanged = false
     }
+    guardian.baseHealth = guardian.health
     guardian.id = guardian.class .. Guardian.guardianIndex
     guardian.x = display.contentCenterX
     guardian.y = display.contentCenterY
@@ -55,7 +56,6 @@ function Guardian:new(class)
 
     -- RECURSIVE FUNCTIONS WITH CALLBACK FUNCTIONS
     guardian.move = function(x, y, callback, options)
-      local direction = 'none'
       local xStart, yStart = guardian.x, guardian.y
       local xFinish, yFinish = tonumber(x), tonumber(y)
 
@@ -119,6 +119,27 @@ function Guardian:new(class)
           guardian.x = guardian.x - 200
         end
         guardian.view.sprite.animate('Standing' .. String:toTitleCase(options.direction))
+        callback()
+      end)
+    end
+    guardian.teleport = function(x, y, callback, options)
+      local xStart, yStart = guardian.x, guardian.y
+      local xFinish, yFinish = tonumber(x), tonumber(y)
+
+      local direction
+      if xStart == xFinish then
+        direction = yStart > yFinish and 'up' or 'down' 
+      else
+        direction = xStart > xFinish and 'left' or 'right'
+      end
+
+      if options and options.isStart then
+        guardian.view.sprite.animate('Walking' .. String:toTitleCase(direction))
+      end
+
+      timer.performWithDelay(2000, function()
+        guardian.x, guardian.y = x, y
+        guardian.view.sprite.animate('Standing' .. String:toTitleCase(direction))
         callback()
       end)
     end
@@ -253,6 +274,11 @@ function Guardian:new(class)
           Wave.guardianCount = Wave.guardianCount - 1
           Wave.guardianKilled = Wave.guardianKilled + 1
           guardian.destroy()
+          return
+        end
+
+        if guardian.health < guardian.baseHealth * 0.25 then
+          guardian.events.execute('onLowHealth')
         end
       end
     end
@@ -269,6 +295,25 @@ function Guardian:new(class)
               timer.performWithDelay(1, function() 
                 guardian.events.eventSet['onEnemySeen'].target = enemy
                 guardian.events.execute('onEnemySeen')
+              end)  
+            end
+          end
+        end
+      end
+    end
+    guardian.onAllySeen = function(ally)
+      if guardian.health > 0 then
+        if #guardian.events.eventSet['onAllySeen'].skillSet ~= 0 then 
+          if not guardian.ally then
+            if ally.health > 0 then
+              guardian.view.sprite.animate('Standing' .. (ally.x > guardian.x and 'Right' or 'Left'))
+              transition.cancel(guardian.view)
+              guardian.ally = ally 
+
+              -- RANGED
+              timer.performWithDelay(1, function() 
+                guardian.events.eventSet['onAllySeen'].target = ally
+                guardian.events.execute('onAllySeen')
               end)  
             end
           end

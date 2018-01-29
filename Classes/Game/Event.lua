@@ -45,7 +45,7 @@ function Event:newSet(parent)
   events.execute = function(name, index)
     if not events.parent.isDestroyed then
       -- PRIORITIZATION OF EVENTS
-      local priority = { 'onGuardianStoneAttacked', 'onEnemySeen', 'onAllySeen', 'onLowHealth', 'onIdle', 'onStart' }
+      local priority = { 'onGuardianStoneAttacked', 'onLowHealth', 'onEnemySeen', 'onAllySeen', 'onIdle', 'onStart' }
       for i, v in ipairs(priority) do
         if v == name or v == events.eventExecuted then 
           if #events.eventSet[v].skillSet ~= 0 then
@@ -113,6 +113,23 @@ function Event:newSet(parent)
             ['moveToY'] = function()
               parent.move(parent.x, executable.params.yCoordinate, function() parent.events.execute(name, index + 1) end, { isStart = true })
             end,
+            ['teleportToStone'] = function()
+              parent.teleport(display.contentCenterX, display.contentCenterY, function() parent.events.execute(name, index + 1) end, { isStart = true })
+            end,
+            ['teleportToEnemy'] = function()
+              if name == 'onEnemySeen' then
+                parent.teleport(events.eventSet[name].target.x, events.eventSet[name].target.y, function() parent.events.execute(name, index + 1) end, { isStart = true })
+              else
+                parent.wonder(function() parent.events.execute(name, index + 1) end)
+              end
+            end,
+            ['teleportToAlly'] = function()
+              if name == 'onAllySeen' then
+                parent.teleport(events.eventSet[name].target.x, events.eventSet[name].target.y, function() parent.events.execute(name, index + 1) end, { isStart = true })
+              else
+                parent.wonder(function() parent.events.execute(name, index + 1) end)
+              end
+            end,
             ['attack'] = function()
               if parent.target.health > 0 then
                 parent.attackEnemy(events.eventSet[name].target, function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end)
@@ -145,7 +162,7 @@ function Event:newSet(parent)
           if executableSet[executable.name] then executableSet[executable.name]() end
         else
           events.eventExecuted = nil
-          parent.target = nil
+          parent.target, parent.ally  = nil, nil
         end
       end
     end

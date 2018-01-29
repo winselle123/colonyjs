@@ -4,6 +4,7 @@ local SpriteRenderer = require('Classes.Renderer.SpriteRenderer')
 local EventRenderer = require('Classes.Renderer.EventRenderer')
 
 local GuardianRenderer = {
+  isEditable = false, 
   activeGuardian = nil
 } 
 
@@ -35,17 +36,17 @@ function GuardianRenderer:prepare(parent, options)
     if #enemySet > 0 then 
       parent.onEnemySeen(enemySet[1].parent)
     elseif #guardianSet > 0 then
-      parent.events.eventSet['onAllySeen'].target = guardianSet[1]
-      parent.events.execute('onAllySeen', 1)
+      parent.onAllySeen(guardianSet[1].parent)
     end
   end, 0)
-  toggleables.sightRadius:setFillColor(1, 0.25)
+  toggleables.sightRadius:setFillColor(1, 0.1)
   toggleables.skillButton = display.newCircle(toggleables, 75, 0, 30)
   toggleables.skillButton:addEventListener('touch', function(event) 
     if event.phase == 'ended' then
       parent.events.view = EventRenderer:prepareEventList(parent.events)
       parent.events.view.isVisible = true
     end
+    return true
   end)
   toggleables.itemButton = display.newCircle(toggleables, 150, 0, 30)
   toggleables.isVisible = false
@@ -63,27 +64,29 @@ function GuardianRenderer:prepare(parent, options)
       focus.isFocus = true
 
       -- ALLOWS ONE GUARDIAN TO BE SELECTED
+      parent.info.isVisible = false
+      parent.info:removeSelf() 
+      parent.info = GuardianRenderer:prepareInfo(parent)
+      parent.info.isVisible = true
+
       if GuardianRenderer.activeGuardian then
         GuardianRenderer.activeGuardian.view.toggleables.isVisible = false
-        parent.info.isVisible = false
         if parent == GuardianRenderer.activeGuardian then
           GuardianRenderer.activeGuardian = nil
         else
           GuardianRenderer.activeGuardian = parent
           GuardianRenderer.activeGuardian.view.toggleables.isVisible = true
-          parent.info = GuardianRenderer:prepareInfo(parent)
-          parent.info.isVisible = true
         end
       else
         GuardianRenderer.activeGuardian = parent
         GuardianRenderer.activeGuardian.view.toggleables.isVisible = true
-        parent.info = GuardianRenderer:prepareInfo(parent)
-        parent.info.isVisible = true
       end
     elseif event.phase == 'moved' then
-      guardianGroup.sprite.animate('Drag')
-      parent.x = event.x
-      parent.y = event.y
+      if GuardianRenderer.isEditable then
+        guardianGroup.sprite.animate('Drag')
+        parent.x = event.x
+        parent.y = event.y
+      end
     elseif event.phase == 'ended' or event.phase == 'cancelled' then
       guardianGroup.sprite.animate('StandingDown')
       stage:setFocus(focus, nil)
@@ -93,7 +96,7 @@ function GuardianRenderer:prepare(parent, options)
   end)
   guardianGroup.sprite:addEventListener('tap', function(event) 
     if event.numTaps >= 2 then
-      parent.destroy()
+      if GuardianRenderer.isEditable then parent.destroy() end
     end
     return true
   end)

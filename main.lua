@@ -45,6 +45,13 @@ end)
 local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
 Runtime:addEventListener('touch', function(event)
   if event.phase == 'began' then
+    local Guardian = require('Classes.Game.Guardian')
+    local GuardianRenderer = require('Classes.Renderer.GuardianRenderer')
+    GuardianRenderer.activeGuardian = nil
+    for i, v in ipairs(Guardian.guardianSet) do
+      v.info.isVisible = false
+      v.view.toggleables.isVisible = false
+    end
     ComponentRenderer:renderClicker(event.x, event.y)
   end
 end)

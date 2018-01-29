@@ -7,7 +7,6 @@ local scene = composer.newScene()
 
 -- create()
 function scene:create( event )
-
   local sceneGroup = self.view
   -- Code here runs when the scene is first created but has not yet appeared on screen
 end
@@ -20,16 +19,14 @@ function scene:show( event )
 
   if ( phase == "will" ) then
     -- Code here runs when the scene is still off screen (but is about to come on screen)
-    Game.sceneActivated = 'Battle proper'
-    Game:_init()
-
+  
     -- INITIALIZE BACKGROUND 
-    local background = display.newImageRect('Assets/Backgrounds/Grass.png', display.contentWidth, display.contentHeight)
+    local background = display.newImageRect('Assets/Backgrounds/Grass.png', display.contentWidth * 2.5, display.contentHeight * 2.5)
     background.x, background.y = display.contentCenterX, display.contentCenterY
     sceneGroup:insert(background)
-
-    local placeholder = display.newText('Battle proper', display.contentCenterX, display.contentCenterY, native.systemFont, 24)
-    sceneGroup:insert(placeholder)
+    
+    Game.sceneActivated = 'Battle proper'
+    Game:_init()
 
     local btn_OptionsBattle = ComponentRenderer:renderButton('Assets/Buttons/Btn_Settings.png', {
       filename_clicked = 'Assets/Buttons/Btn_SettingsClicked.png',

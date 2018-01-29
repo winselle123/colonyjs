@@ -34,6 +34,7 @@ function Monster:new(class, x, y)
       hasChanged = false,
       target = nil
     }
+    monster.baseHealth = monster.health
     monster.id = monster.class .. Monster.monsterIndex
     monster.x = x and x or display.contentCenterX
     monster.y = y and y or display.contentCenterY

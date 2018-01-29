@@ -21,9 +21,19 @@ function ComponentRenderer:renderButton(filename, attributes)
     buttonGroup:insert(invisibleTrigger)
     invisibleTrigger:addEventListener('touch', function(event)
       if event.phase == 'began' then
+        display.currentStage:setFocus(invisibleTrigger)
         buttonClicked.isVisible = true
         button.isVisible = false
-      elseif event.phase == 'ended' then
+      elseif event.phase == 'moved' then
+        local xWithin = event.x > buttonClicked.contentBounds.xMin and event.x < buttonClicked.contentBounds.xMax
+        local yWithin = event.y > buttonClicked.contentBounds.yMin and event.y < buttonClicked.contentBounds.yMax
+        if not xWithin and yWithin then
+          display.currentStage:setFocus(nil)
+          buttonClicked.isVisible = false
+          button.isVisible = true
+        end
+      elseif event.phase == 'ended' or event.phase == 'cancelled' then
+        display.currentStage:setFocus(nil)
         buttonClicked.isVisible = false
         button.isVisible = true
       end

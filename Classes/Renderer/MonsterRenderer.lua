@@ -1,7 +1,5 @@
 local Collision = require('Classes.System.Collision')
-local DisplayObject = require('Classes.System.DisplayObject')
 local SpriteRenderer = require('Classes.Renderer.SpriteRenderer')
-local EventRenderer = require('Classes.Renderer.EventRenderer')
 
 local MonsterRenderer = {
   activeMonster = nil
@@ -33,12 +31,40 @@ function MonsterRenderer:prepare(parent, options)
 
     -- REQUEST ONENEMYSEEN EXECUTE IF ENEMY SET HAS NUMBER, ELSE ONALLYSEEN ON SAME SCENARIO, ELSE NONE
     if #enemySet > 0 then
-      parent.onEnemySeen(enemySet[1].parent)
+      local index = nil
+      if parent.health > parent.baseHealth * 0.45 then
+        for i, v in ipairs(enemySet) do
+          if v.parent.id == 'rock' then 
+            index = i 
+            break
+          end
+        end
+      elseif parent.health <= parent.baseHealth * 0.45 and parent.health > 0 then
+        if parent.target.id == 'rock' then parent.target = nil end
+        for i, v in ipairs(enemySet) do
+          if v.parent.id ~= 'rock' then
+            index = i
+            break
+          end
+        end
+
+        if not index then 
+          for i, v in ipairs(enemySet) do
+            if v.parent.id == 'rock' then 
+              index = i 
+              break
+            end
+          end
+        end
+      end
+
+      if index then parent.onEnemySeen(enemySet[index].parent) end
     elseif #monsterSet > 0 then
     end
   end, 0)
-  toggleables.sightRadius:setFillColor(1, 0.25)
+  toggleables.sightRadius:setFillColor(1, 0.1)
   monsterGroup.toggleables = toggleables
+  toggleables.isVisible = false
   monsterGroup:insert(toggleables)
 
   -- SETUP ATTACK SPRITE

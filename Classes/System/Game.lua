@@ -5,10 +5,13 @@ local DisplayObject = require('Classes.System.DisplayObject')
 local Wave = require('Classes.System.Wave')
 
 local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
+local GuardianRenderer = require('Classes.Renderer.GuardianRenderer')
+local SpriteRenderer = require('Classes.Renderer.SpriteRenderer')
 
 local Guardian = require('Classes.Game.Guardian')
 local Monster = require('Classes.Game.Monster')
 local Event = require('Classes.Game.Event')
+local Rock = require('Classes.Game.Rock')
 
 local Game = {
   wave = 0,
@@ -19,6 +22,9 @@ local Game = {
 }
 
 function Game:_init()
+  -- INITIALIZE ROCK
+  Rock:new()
+
   -- INITIALIZE DRAW TIMER/RENDER TIMER
   timer.performWithDelay(1, function()
     for i, v in ipairs(GameObject.gameObjectSet) do
@@ -72,6 +78,9 @@ function Game:_destroy()
 end
 
 function Game:prepare()
+  GuardianRenderer.isEditable = true
+  Collision.isDetecting = false
+
   Game.wave = Game.wave + 1
 
   -- INITIATE PANEL FOR PICKER
@@ -118,11 +127,11 @@ function Game:prepare()
   -- BUTTON FOR GOING TO BATTLE
   local btn_Battle = ComponentRenderer:renderButton('Assets/Buttons/Btn_Play.png', { 
     filename_clicked = 'Assets/Buttons/Btn_PlayClicked.png',
-    width = 300, 
+    width = 86, 
     height = 86
   })
-  btn_Battle.x = display.contentCenterX 
-  btn_Battle.y = btn_Battle.height / 2 + 25
+  btn_Battle.x = display.contentWidth - btn_Battle.width / 2 - 25 
+  btn_Battle.y = (btn_Battle.height / 2 + 25) * 2 + 40
   btn_Battle:addEventListener('touch', function(event)
     if event.phase == 'ended' then
       pickerGroup.isVisible = false
@@ -139,7 +148,11 @@ function Game:prepare()
 end
 
 function Game:battle() 
+  GuardianRenderer.isEditable = false
+  Collision.isDetecting = true
+
   for i, v in ipairs(Guardian.guardianSet) do
+    v.info.isVisible = false
     v.events.execute('onStart')
   end
 

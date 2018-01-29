@@ -1,5 +1,5 @@
 local Collision = {
-  isDetecting = true, 
+  isDetecting = false, 
   collisionObjectSet = {}
 }
 
