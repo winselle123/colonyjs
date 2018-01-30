@@ -37,6 +37,7 @@ function Guardian:new(class)
       sightRadius = String:filterNumbers(classFile:read()),
 
       isWalking = false,
+      isChanneling = false,
       isDestroyed = false,
       hasChanged = false
     }
@@ -89,7 +90,10 @@ function Guardian:new(class)
         guardian.view.sprite.animate('Walking' .. String:toTitleCase(options.direction))
       end
 
-      timer.performWithDelay(200, function() 
+      local channelTime = 200
+      guardian.isChanneling = true
+      timer.performWithDelay(channelTime, function() 
+        guardian.isChanneling = false
         if options.direction == 'up' then
           guardian.y = guardian.y - 75
         elseif options.direction == 'right' then
@@ -108,7 +112,10 @@ function Guardian:new(class)
         guardian.view.sprite.animate('Walking' .. String:toTitleCase(options.direction))
       end
 
-      timer.performWithDelay(1000, function() 
+      local channelTime = 1000
+      guardian.isChanneling = true
+      timer.performWithDelay(channelTime, function() 
+        guardian.isChanneling = false
         if options.direction == 'up' then
           guardian.y = guardian.y - 200
         elseif options.direction == 'right' then
@@ -137,7 +144,10 @@ function Guardian:new(class)
         guardian.view.sprite.animate('Walking' .. String:toTitleCase(direction))
       end
 
-      timer.performWithDelay(2000, function()
+      local channelTime = 2000
+      guardian.isChanneling = true
+      timer.performWithDelay(channelTime, function()
+        guardian.isChanneling = false
         guardian.x, guardian.y = x, y
         guardian.view.sprite.animate('Standing' .. String:toTitleCase(direction))
         callback()
@@ -266,8 +276,6 @@ function Guardian:new(class)
       if guardian.health > 0 then
         local damage = (options and options.isDefenseNulled) and source.attack or math.floor(source.attack - guardian.defense / 2)
         guardian.health = guardian.health - damage
-
-        guardian.view.health.text = 'Health: ' .. guardian.health
 
         if guardian.health <= 0 then
           -- GUARDIAN COUNT 

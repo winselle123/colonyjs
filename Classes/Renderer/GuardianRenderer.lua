@@ -13,6 +13,20 @@ function GuardianRenderer:prepare(parent, options)
 
   -- SETUP GO-ALONG INFORMATION
   guardianGroup.health = display.newText(guardianGroup, 'Health: ' .. parent.health, 0, -60, native.systemFont, 24)
+  timer.performWithDelay(1, function() guardianGroup.health.text = 'Health: ' .. parent.health end, 0)
+  guardianGroup.timer = display.newText(guardianGroup, 'Channeling.', 0, guardianGroup.health.y - guardianGroup.health.height / 2 - 20, native.systemFont, 24)
+  timer.performWithDelay(500, function()
+    if guardianGroup.timer.text == 'Channeling.' then
+      guardianGroup.timer.text = 'Channeling .'
+    elseif guardianGroup.timer.text == 'Channeling .' then
+      guardianGroup.timer.text = 'Channeling  .'
+    elseif guardianGroup.timer.text == 'Channeling  .' then
+      guardianGroup.timer.text = 'Channeling.' 
+    end
+  end, 0)
+  timer.performWithDelay(1, function() 
+    guardianGroup.timer.isVisible =  parent.isChanneling and true or false 
+  end, 0)
   guardianGroup.class = display.newText(guardianGroup, parent.class, 0, 60, native.systemFont, 24)
 
   -- SETUP TOGGLEABLE DISPLAYS
