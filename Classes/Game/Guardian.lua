@@ -173,7 +173,8 @@ function Guardian:new(class)
 
             local bullet = Bullet:new(guardian, target, { xScale = 1, yScale = 1 })
             bullet.view.isVisible = false
-            timer.performWithDelay(2000, function() bullet.view.isVisible = true bullet.shoot(function() guardian.attack = guardian.attack / 1.5 callback() end) end)
+            guardian.isChanneling = true
+            timer.performWithDelay(2000, function() guardian.isChanneling = false bullet.view.isVisible = true bullet.shoot(function() guardian.attack = guardian.attack / 1.5 callback() end) end)
           elseif options and options.poisoned then
             guardian.attack = guardian.attack / 2
             local bullet = Bullet:new(guardian, target, { isPoisoned = true })
@@ -186,13 +187,16 @@ function Guardian:new(class)
           local attack = { class = guardian.class .. 'Attack' }
           guardian.view.attackSprite = SpriteRenderer:draw(attack)
           if options and options.charged then 
+            guardian.attack = guardian.attack * 1.5
             guardian.view.attackSprite.xScale, guardian.view.attackSprite.yScale = 1.25, 1.25 
             guardian.view.attackSprite.isVisible = false
+            guardian.isChanneling = true
           end
           guardian.view:insert(guardian.view.attackSprite)
 
           function spriteListener(event)
             if event.phase == 'began' then
+              guardian.isChanneling = false
               guardian.view.attackSprite.isVisible = true
             elseif event.phase == 'ended' then
               local attackCollision = Collision:newRectangle(guardian, guardian.view.attackSprite.width, guardian.view.attackSprite.height, { tag = 'Attack' .. guardian.id })
@@ -203,13 +207,14 @@ function Guardian:new(class)
                 for i, v in ipairs(charSet) do
                   if v.parent.side == 'monster' then
                     if guardian.health > 0 and (v.parent and v.parent.health > 0) then
-                      if options and options.isPoisoned then v.parent.onPoisoned() end 
+                      if options and options.poisoned then v.parent.onPoisoned() end 
                       v.parent.onDamaged(guardian)
                     end
                   end
                 end
 
-                if callback then timer.performWithDelay(guardian.slackTime * 1000, callback) end
+                if options and options.charged then guardian.attack = guardian.attack / 1.5 end
+                if callback then timer.performWithDelay(guardian.slackTime * 1000, function() callback() end) end
 
                 guardian.view.attackSprite:removeEventListener('sprite', spriteListener)
                 timer.performWithDelay(1, function() Collision:deleteByTag('Attack' .. guardian.id) end)
@@ -225,6 +230,79 @@ function Guardian:new(class)
             guardian.view.attackSprite.animate('Attack')
           end
         end
+      end
+    end
+
+    -- DEFENSE FUNCTIONS
+    guardian.shield = function(callback, options) 
+      if guardian.health > 0 then
+        guardian.isChanneling = true
+        local channelTime = (options and options.charged) and 1000 or 1
+        timer.performWithDelay(channelTime, function()      
+          guardian.isChanneling = false
+          guardian.view.shieldSprite.isVisible = true
+          guardian.health = guardian.health + 10
+
+          if options and options.charged then guardian.view.shieldSprite.xScale, guardian.view.shieldSprite.yScale = 5, 5 end
+
+          timer.performWithDelay(1000, function() 
+            guardian.health = guardian.health - 10
+
+            if guardian.health > 0 then 
+              guardian.view.shieldSprite.xScale, guardian.view.shieldSprite.yScale = 3, 3
+              guardian.view.shieldSprite.isVisible = false 
+              timer.performWithDelay(guardian.slackTime * 1000, function() callback() end)
+            else
+              guardian.destroy(x)
+            end
+          end)
+        end)
+      end
+    end
+    guardian.shieldField = function(callback, options)
+      if guardian.health > 0 then
+        guardian.isChanneling = true
+        local channelTime = 2000
+        timer.performWithDelay(channelTime, function() 
+          guardian.isChanneling = false
+          guardian.view.shieldField = display.newCircle(0, 0, 0)
+          guardian.view.shieldField:setFillColor(1, 0.5)
+          guardian.view:insert(guardian.view.shieldField)
+          guardian.view.shieldField:toBack()
+
+          transition.to(guardian.view.shieldField.path, { 
+            time = 500,
+            radius = 100, 
+            transition = easing.inExpo,
+            onComplete = function()
+              local shieldCollision = Collision:newCircle(guardian, 100, { tag = 'Shield' .. guardian.id })
+              timer.performWithDelay(2, function()
+                local charSet = Collision:filterSensors(shieldCollision.collidedObjects)
+
+                -- FILTER ENEMIES AND GUARDIANS
+                for i, v in ipairs(charSet) do
+                  if v.parent.side == 'guardian' then
+                    if v.parent.health > 0 then
+                      v.parent.health = v.parent.health + 5
+                      print(v.parent.health - 5 .. ' => ' .. v.parent.health)
+
+                      timer.performWithDelay(1000, function() 
+                        v.parent.health = v.parent.health - 5 
+                        if v.parent.health <= 0 then
+                          v.parent.destroy()
+                        end
+                      end) 
+                    end
+                  end
+                end
+                timer.performWithDelay(1000, function() guardian.view.shieldField.isVisible = false end)
+
+                if callback then timer.performWithDelay(guardian.slackTime * 1000, function() callback() end) end
+                timer.performWithDelay(1, function() Collision:deleteByTag('Shield' .. guardian.id) end)
+              end)
+            end
+          })
+        end)
       end
     end
 
@@ -275,7 +353,10 @@ function Guardian:new(class)
     guardian.onDamaged = function(source, options)
       if guardian.health > 0 then
         local damage = (options and options.isDefenseNulled) and source.attack or math.floor(source.attack - guardian.defense / 2)
+        damage = damage > 0 and damage or 0
         guardian.health = guardian.health - damage
+
+        print('Damage: ' .. damage)
 
         if guardian.health <= 0 then
           -- GUARDIAN COUNT 

@@ -59,7 +59,7 @@ function SpriteRenderer:draw(parent, options)
     local sequenceData = seqTable
     local imageSheet = graphics.newImageSheet('Assets/Sprites/' .. class .. '.png', sheetOptions)
     local sprite = display.newSprite(imageSheet, sequenceData)
-    if options and options.xScale and options.yScale then sprite:scale(options.xScale, options.yScale) end
+    if options and options.xScale and options.yScale then sprite.xScale, sprite.yScale = options.xScale, options.yScale end
     sprite.isVisible = true
 
     sprite.animate = function(sequence) 

@@ -67,6 +67,13 @@ function GuardianRenderer:prepare(parent, options)
   guardianGroup.toggleables = toggleables
   guardianGroup:insert(toggleables)
 
+  -- SETUP DEFENSE SPRITE
+  local light = { class = 'Light' }
+  guardianGroup.shieldSprite = SpriteRenderer:draw(light, { xScale = 3, yScale = 3 })
+  guardianGroup.shieldSprite.animate('Shimmer')
+  guardianGroup.shieldSprite.isVisible = false
+  guardianGroup:insert(guardianGroup.shieldSprite)  
+
   -- SETUP SPRITE
   guardianGroup.sprite = SpriteRenderer:draw(parent, options)
   guardianGroup.sprite.collision = Collision:newRectangle(parent, guardianGroup.sprite.width, guardianGroup.sprite.height)

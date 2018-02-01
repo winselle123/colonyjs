@@ -64,9 +64,6 @@ Charges and powerfully shields the guardian
 chargedShieldField
 defense
 Charges and creates a defensive field within the guardian
-protect
-defense
-Sends a weak shield to a targeted ally
 repeat
 misc
 Repeats the whole process from the starting card

@@ -27,10 +27,12 @@ function ComponentRenderer:renderButton(filename, attributes)
       elseif event.phase == 'moved' then
         local xWithin = event.x > buttonClicked.contentBounds.xMin and event.x < buttonClicked.contentBounds.xMax
         local yWithin = event.y > buttonClicked.contentBounds.yMin and event.y < buttonClicked.contentBounds.yMax
-        if not xWithin and yWithin then
+        if not (xWithin and yWithin) then
           display.currentStage:setFocus(nil)
           buttonClicked.isVisible = false
           button.isVisible = true
+        else
+          display.currentStage:setFocus(invisibleTrigger)
         end
       elseif event.phase == 'ended' or event.phase == 'cancelled' then
         display.currentStage:setFocus(nil)

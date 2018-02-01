@@ -155,7 +155,10 @@ function Monster:new(class, x, y)
     monster.onDamaged = function(source)
       if monster.health > 0 then
         local damage = (options and options.isDefenseNulled) and source.attack or math.floor(source.attack - monster.defense / 2)
+        damage = damage > 0 and damage or 0
         monster.health = monster.health - damage
+
+        print('Damage: ' .. damage)
 
         monster.view.health.text = 'Health: ' .. monster.health
 

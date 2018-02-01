@@ -30,7 +30,7 @@ function Event:newSet(parent)
         description = 'This event happens when the guardian has not moved for the past three seconds.'
       },
       ['onGuardianStoneAttacked'] = {
-        isOffensive = true,
+        isOffensive = false,
         description = 'This event happens when the guardian stone has been attacked by an enemy.'
       }
     }
@@ -69,7 +69,6 @@ function Event:newSet(parent)
             end
           end
 
-          -- EXECUTE IF NO ERROR
           local executableSet = {
             ['moveLeft'] = function() 
               parent.move(parent.x - executable.params.steps, parent.y, function() parent.events.execute(name, index + 1) end, { isStart = true }) 
@@ -131,25 +130,34 @@ function Event:newSet(parent)
               end
             end,
             ['attack'] = function()
-              if parent.target.health > 0 then
+              if parent.target and parent.target.health > 0 then
                 parent.attackEnemy(events.eventSet[name].target, function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end)
               else
                 parent.wonder(function() parent.events.execute(name, index + 1) end)
               end
             end,
             ['chargedAttack'] = function()
-              if parent.target.health > 0 then
+              if parent.target and parent.target.health > 0 then
                 parent.attackEnemy(events.eventSet[name].target, function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end, { charged = true })
               else
                 parent.wonder(function() parent.events.execute(name, index + 1) end)
               end
             end,
             ['poisonedAttack'] = function()
-              if parent.target.health > 0 then
+              if parent.target and parent.target.health > 0 then
                 parent.attackEnemy(events.eventSet[name].target, function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end, { poisoned = true })
               else
                 parent.wonder(function() parent.events.execute(name, index + 1) end)
               end
+            end,
+            ['shield'] = function()
+              parent.shield(function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end)
+            end,
+            ['chargedShield'] = function()
+              parent.shield(function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end, { charged = true })
+            end,
+            ['chargedShieldField'] = function()
+              parent.shieldField(function() timer.performWithDelay(parent.slackTime * 1000, function() parent.events.execute(name, index + 1) end) end)
             end,
             ['repeat'] = function()
               parent.events.execute(name)
@@ -158,6 +166,12 @@ function Event:newSet(parent)
               timer.performWithDelay(parent.slackTime * 1000, parent.events.execute(name, index + 1))
             end
           }
+
+          if executable.name == 'random' then 
+            local randomableSkill = { 'dashLeft', 'dashRight', 'dashUp', 'dashDown', 'launchLeft', 'launchRight', 'launchUp', 'launchDown', 'teleportToStone', 'shield', 'chargedShield', 'chargedShieldField', 'doNothing' }
+            math.randomseed(os.time())
+            executable.name = randomableSkill[math.random(#randomableSkill)]
+          end 
 
           if executableSet[executable.name] then executableSet[executable.name]() end
         else
