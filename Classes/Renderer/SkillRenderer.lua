@@ -6,7 +6,7 @@ local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
 
 local SkillRenderer = {}
 
-function SkillRenderer:prepareSkillList(parent, options) 
+function SkillRenderer:prepareSkillList(parent, options)
   local displayGroup = display.newGroup()
 
   -- CONTAINER
@@ -19,13 +19,30 @@ function SkillRenderer:prepareSkillList(parent, options)
   for i, v in ipairs(parent) do
     displayGroup.cardSetGroup[v] = {}
     displayGroup.cardSetGroup[v].cardGroup = display.newGroup()
-    displayGroup.cardSetGroup[v].cardGroup.cardContainer = display.newRoundedRect(displayGroup.cardSetGroup[v].cardGroup, 0, 0, 130, 175, 10)
-    displayGroup.cardSetGroup[v].cardGroup.cardContainer.fill = {
-      type = 'image',
-      filename = 'Assets/SkillIcons/Placeholder.png'
+
+    -- IMAGE SHEET
+    local sheetOptions = {
+      width = 130, 
+      height = 175,
+      numFrames = 4,
+      sheetContentWidth = 520,
+      sheetContentHeight = 176 
     }
-    displayGroup.cardSetGroup[v].cardGroup.cardContainer.strokeWidth = 3
-    displayGroup.cardSetGroup[v].cardGroup.cardContainer:setStrokeColor(0)
+    local imageSheet = graphics.newImageSheet('Assets/SkillIcons/' .. v.name .. '.png', sheetOptions)
+
+    if imageSheet then
+      local sequence = { name = 'play', start = 1, count = 4, time = 500, loopCount = 0, loopDirection = 'forward' }
+      displayGroup.cardSetGroup[v].cardGroup.cardContainer = display.newSprite(displayGroup.cardSetGroup[v].cardGroup, imageSheet, sequence)
+      displayGroup.cardSetGroup[v].cardGroup.cardContainer:play('play')
+    else
+      displayGroup.cardSetGroup[v].cardGroup.cardContainer = display.newRoundedRect(displayGroup.cardSetGroup[v].cardGroup, 0, 0, 130, 175, 10)
+      displayGroup.cardSetGroup[v].cardGroup.cardContainer.fill = {
+        type = 'image',
+        filename = 'Assets/SkillIcons/Placeholder.png'
+      }
+      displayGroup.cardSetGroup[v].cardGroup.cardContainer.strokeWidth = 3
+      displayGroup.cardSetGroup[v].cardGroup.cardContainer:setStrokeColor(0)
+    end
     displayGroup.cardSetGroup[v].cardGroup.x = displayGroup.cardSetGroup[v].cardGroup.width / 2 + (index - 1) * displayGroup.cardSetGroup[v].cardGroup.width + index * 10
     displayGroup.cardSetGroup[v].cardGroup.cardContainer:addEventListener('touch', function(event) 
       if event.phase == 'ended' then
@@ -110,11 +127,28 @@ function SkillRenderer:updateSkill(skill)
 
   -- CARD INFORMATION
   displayGroup.infoGroup = display.newGroup()
-  displayGroup.infoGroup.card = display.newRoundedRect(displayGroup.infoGroup, 0, 0, 200, 270, 10)
-  displayGroup.infoGroup.card.fill = {
-    type = 'image', 
-    filename = 'Assets/SkillIcons/Placeholder.png'
-  }  
+
+  local sheetOptions = {
+    width = 200, 
+    height = 270,
+    numFrames = 4,
+    sheetContentWidth = 800,
+    sheetContentHeight = 270 
+  }
+  local imageSheet = graphics.newImageSheet('Assets/SkillIcons/' .. skill.name .. '.png', sheetOptions)
+
+  if imageSheet then
+    local sequence = { name = 'play', start = 1, count = 4, time = 500, loopCount = 0, loopDirection = 'forward' }
+    displayGroup.infoGroup.card = display.newSprite(displayGroup.infoGroup, imageSheet, sequence)
+    displayGroup.infoGroup.card:play('play')
+  else
+    displayGroup.infoGroup.card = display.newRoundedRect(displayGroup.infoGroup, 0, 0, 200, 270, 10)
+    displayGroup.infoGroup.card.fill = {
+      type = 'image', 
+      filename = 'Assets/SkillIcons/Placeholder.png'
+    }  
+  end
+  
   displayGroup.infoGroup.cardName = display.newText(displayGroup.infoGroup, skill.name .. '()', 0, displayGroup.infoGroup.card.y + displayGroup.infoGroup.card.height / 2 + 48, native.systemFont, 36)
   displayGroup.infoGroup.cardDescription = display.newText({
     parent = displayGroup.infoGroup, 
@@ -159,23 +193,26 @@ function SkillRenderer:updateSkill(skill)
 
   -- UPDATE BUTTON
   displayGroup.btn_Equip = ComponentRenderer:renderButton('Assets/Buttons/Btn_Update.png', {
-    filename_clicked = 'Assets/Buttons/Btn_UpdateClicked.png',
+    filename_clicked = skill.params and 'Assets/Buttons/Btn_UpdateClicked.png' or nil,
     width = 300, 
     height = 86,
+    isDisabled = not skill.params
   })
   displayGroup.btn_Equip.x = -(displayGroup.btn_Equip.width / 2 + 25)
   displayGroup.btn_Equip.y = (display.contentHeight / 2 - displayGroup.btn_Equip.height / 2) - 150
   displayGroup.btn_Equip:addEventListener('touch', function(event)
-    if event.phase == 'ended' then
-      -- PREPARE PARAMETERS IF ANY
-      local paramKeyValue = nil
+    if skill.params then
+      if event.phase == 'ended' then
+        -- PREPARE PARAMETERS IF ANY
+        local paramKeyValue = nil
 
-      -- HIDE DISPLAY GROUPS
-      for k, v in pairs(skill.params) do
-        skill.params[k] = displayGroup.infoGroup.paramSetGroup[k].paramField.text ~= '' and displayGroup.infoGroup.paramSetGroup[k].paramField.text or v -- TRIM TEXT
+        -- HIDE DISPLAY GROUPS
+        for k, v in pairs(skill.params) do
+          skill.params[k] = displayGroup.infoGroup.paramSetGroup[k].paramField.text ~= '' and displayGroup.infoGroup.paramSetGroup[k].paramField.text or v -- TRIM TEXT
+        end
+        displayGroup:removeSelf()
+        displayGroup.isVisible = false
       end
-      displayGroup:removeSelf()
-      displayGroup.isVisible = false
     end
     return true
   end)
@@ -240,14 +277,30 @@ function SkillRenderer:pickSkill(parent, options)
         desc = skillDesc,
       }
 
-      local card = display.newRoundedRect(0, 0, 130, 175, 10)
-      card.fill = {
-        type = 'image', 
-        filename = 'Assets/SkillIcons/Placeholder.png'
+      local sheetOptions = {
+        width = 130, 
+        height = 175,
+        numFrames = 4,
+        sheetContentWidth = 520,
+        sheetContentHeight = 176 
       }
+      local imageSheet = graphics.newImageSheet('Assets/SkillIcons/' .. skill.name .. '.png', sheetOptions)
+
+      local card = nil
+      if imageSheet then
+        local sequence = { name = 'play', start = 1, count = 4, time = 500, loopCount = 0, loopDirection = 'forward' }
+        card = display.newSprite(imageSheet, sequence)
+        card:play('play')
+      else
+        card = display.newRoundedRect(0, 0, 130, 175, 10)
+        card.fill = {
+          type = 'image',
+          filename = 'Assets/SkillIcons/Placeholder.png'
+        }
+      end
       card.x = card.width / 2 + (xIndex - 1) * card.width + xIndex * 50
       card.y = card.height / 2 + (yIndex - 1) * card.height + yIndex * 50
-      card:addEventListener('touch', function(event) 
+      card:addEventListener('touch', function(event)
         if event.phase == 'ended' then
           options.parentDisplay = displayGroup
           SkillRenderer:displayCardInformation(parent, skill, options)
@@ -307,11 +360,28 @@ function SkillRenderer:displayCardInformation(parent, skill, options)
 
   -- CARD INFORMATION
   displayGroup.infoGroup = display.newGroup()
-  displayGroup.infoGroup.card = display.newRoundedRect(displayGroup.infoGroup, 0, 0, 200, 270, 10)
-  displayGroup.infoGroup.card.fill = {
-    type = 'image', 
-    filename = 'Assets/SkillIcons/Placeholder.png'
-  }  
+
+  local sheetOptions = {
+    width = 200, 
+    height = 270,
+    numFrames = 4,
+    sheetContentWidth = 800,
+    sheetContentHeight = 270 
+  }
+  local imageSheet = graphics.newImageSheet('Assets/SkillIcons/' .. skill.name .. '.png', sheetOptions)
+
+  if imageSheet then
+    local sequence = { name = 'play', start = 1, count = 4, time = 500, loopCount = 0, loopDirection = 'forward' }
+    displayGroup.infoGroup.card = display.newSprite(displayGroup.infoGroup, imageSheet, sequence)
+    displayGroup.infoGroup.card:play('play')
+  else
+    displayGroup.infoGroup.card = display.newRoundedRect(displayGroup.infoGroup, 0, 0, 200, 270, 10)
+    displayGroup.infoGroup.card.fill = {
+      type = 'image', 
+      filename = 'Assets/SkillIcons/Placeholder.png'
+    }  
+  end
+
   displayGroup.infoGroup.cardName = display.newText(displayGroup.infoGroup, skill.name .. '()', 0, displayGroup.infoGroup.card.y + displayGroup.infoGroup.card.height / 2 + 48, native.systemFont, 36)
   displayGroup.infoGroup.cardDescription = display.newText({
     parent = displayGroup.infoGroup, 
