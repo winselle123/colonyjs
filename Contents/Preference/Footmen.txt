@@ -1,0 +1,3 @@
+haircolor_default
+eyecolor_default
+clothes_default

@@ -1,0 +1,8 @@
+haircolor_blue
+haircolor_white
+eyecolor_black
+eyecolor_white
+helm_blue
+helm_brown
+cloth_blue
+cloth_brown

@@ -1,0 +1,8 @@
+haircolor_blue
+haircolor_white
+eyecolor_black
+eyecolor_white
+clothes_green
+clothes_black
+hat_brown
+hat_red

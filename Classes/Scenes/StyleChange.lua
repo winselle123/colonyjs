@@ -1,5 +1,6 @@
 local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
 local Game = require('Classes.System.Game')
+local Style = require('Classes.Game.Style')
 
 local composer = require( "composer" )
 
@@ -24,6 +25,7 @@ function scene:show( event )
   if ( phase == "will" ) then
     -- Code here runs when the scene is still off screen (but is about to come on screen)
     Game.sceneActivated = 'Change looks'
+	Style:render()
 
   elseif ( phase == "did" ) then
     -- Code here runs when the scene is entirely on screen

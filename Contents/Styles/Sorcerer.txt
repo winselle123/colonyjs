@@ -1,0 +1,10 @@
+haircolor_blue
+haircolor_white
+eyecolor_black
+eyecolor_white
+cloak_blue
+cloak_brown
+accessory_blue
+accessory_brown
+sphere_blue
+sphere_brown

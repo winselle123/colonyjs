@@ -1,0 +1,6 @@
+haircolor_blue
+haircolor_white
+eyecolor_black
+eyecolor_white
+cloak_blue
+cloak_brown

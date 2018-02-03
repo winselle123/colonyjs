@@ -1,0 +1,6 @@
+eyecolor_black
+eyecolor_white
+cloak_blue
+cloak_brown
+pants_blue
+pants_brown
