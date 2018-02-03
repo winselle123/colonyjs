@@ -40,7 +40,7 @@ function MonsterRenderer:prepare(parent, options)
           end
         end
       elseif parent.health <= parent.baseHealth * 0.45 and parent.health > 0 then
-        if parent.target.id == 'rock' then parent.target = nil end
+        if (parent.target and parent.target.id == 'rock') then parent.target = nil end
         for i, v in ipairs(enemySet) do
           if v.parent.id ~= 'rock' then
             index = i

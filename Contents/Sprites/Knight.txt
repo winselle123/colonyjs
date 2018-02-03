@@ -1,0 +1,42 @@
+161
+209
+start
+Drop 0 1
+1 4 26 48
+end
+start
+Drag 0 1
+1 4 26 49
+end
+start
+Standing 0 1
+1 4 26 48
+end
+start
+WalkingLeft 600 0
+34 107 30 49
+66 107 30 49
+98 107 30 49
+130 107 30 49
+end
+start
+WalkingRight 600 0
+34 158 30 49
+66 158 30 49
+98 158 30 49
+130 158 30 49
+end
+start
+WalkingUp 600 0
+37 54 25 49
+69 54 25 49
+101 54 25 49
+133 54 25 49
+end
+start
+WalkingDown 600 0
+35 4 25 49
+67 4 25 49
+99 4 25 49
+130 4 25 49
+end

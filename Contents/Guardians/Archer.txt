@@ -1,9 +1,11 @@
 Archer
 A fast, ranged guardian who is best in attacking from the distance
 ranged
-50
+15
 5
 75
 1.5
 100
 200
+3
+3

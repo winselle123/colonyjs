@@ -35,7 +35,7 @@ function Bullet:new(parent, target, options)
               for i, v in ipairs(charSet) do
                 if v.parent.side ~= bullet.parent.side then 
                   if parent.health > 0 and (v.parent and v.parent.health > 0) then
-                    if options and options.isPoisoned then v.parent.onPoisoned() end 
+                    if options and options.isPoisoned then v.parent.onPoisoned(parent) end 
                     v.parent.onDamaged(parent)
                   end
                 end

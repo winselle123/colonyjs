@@ -1,0 +1,11 @@
+Priest
+She's your friend, she's your colleague, she's your healer
+ranged
+5
+10
+75
+1.5
+100
+200
+30
+0

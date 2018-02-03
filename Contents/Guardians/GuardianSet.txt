@@ -1,2 +1,5 @@
 Footmen
 Archer
+Knight
+Priest
+Sorcerer

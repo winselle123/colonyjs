@@ -1,56 +1,42 @@
-157
+196
 201
 start
 Drop 750 1
-5 2 25 49
-5 2 25 49
-5 2 25 49
+4 1 26 49
 end
 start
 Drag 0 1
-5 2 25 49
+4 1 26 49
 end
 start
-StandingLeft 0 1
-4 101 30 49
-end
-start
-StandingRight 0 1
-4 151 30 49
-end
-start
-StandingUp 0 1
-9 51 25 49
-end
-start
-StandingDown 0 1
-5 2 25 49
+Standing 0 1
+4 1 26 49
 end
 start
 WalkingLeft 600 0
-4 101 30 49
 43 101 30 49
-80 101 33 49
-122 101 30 49
+83 101 30 49
+118 101 34 49
+160 101 30 49
 end
 start
 WalkingRight 600 0
-5 151 30 49
-44 151 30 49
-83 151 33 49
-122 151 30 49
+43 150 30 49
+83 150 30 49
+118 150 34 49
+160 150 30 49
 end
 start
 WalkingUp 600 0
-9 51 25 49
 48 51 25 49
 87 51 25 49
 125 51 25 49
+165 51 25 49
 end
 start
 WalkingDown 600 0
-5 0 25 49
-44 0 25 49
-84 0 25 49
-122 0 25 49
+43 1 25 49
+83 1 25 49
+122 1 25 49
+161 1 25 49
 end

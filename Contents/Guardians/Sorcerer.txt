@@ -1,0 +1,11 @@
+Sorcerer
+A body full of magic is all you need to defeat the forces of evil
+ranged
+20
+3
+60
+1.5
+100
+175
+5
+5

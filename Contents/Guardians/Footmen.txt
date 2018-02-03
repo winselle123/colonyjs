@@ -1,9 +1,11 @@
 Footmen
 Plain old, boring warriors with recycled sword as weapons
 melee
-40
+20
 10
 50
 1.5
 100
 150
+3
+3

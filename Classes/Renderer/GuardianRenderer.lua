@@ -109,7 +109,7 @@ function GuardianRenderer:prepare(parent, options)
         parent.y = event.y
       end
     elseif event.phase == 'ended' or event.phase == 'cancelled' then
-      guardianGroup.sprite.animate('StandingDown')
+      guardianGroup.sprite.animate('Standing')
       stage:setFocus(focus, nil)
       focus.isFocus = false
     end    
@@ -184,11 +184,8 @@ parent.desc .. '\n\n' ..
   local infoGroup = display.newGroup()
   infoGroup.container = display.newRoundedRect(infoGroup, 0, 0, 500, 750, 10)
   infoGroup.iconContainer = display.newCircle(infoGroup, 0, -(infoGroup.container.height / 2), 75)
-  infoGroup.icon = display.newCircle(infoGroup, 0, -(infoGroup.container.height / 2), 50)
-  infoGroup.icon.fill = {
-    type = 'image', 
-    filename = 'Assets/ClassIcons/' .. parent.class .. 'White.png'
-  }
+  infoGroup.icon = display.newImageRect(infoGroup, 'Assets/ClassIcons/' .. parent.class .. '.png', 60, 60)
+  infoGroup.icon.y = -(infoGroup.container.height / 2)
   infoGroup.text = display.newText({
     parent = infoGroup,
     text = string, 
@@ -201,7 +198,7 @@ parent.desc .. '\n\n' ..
   infoGroup.text:setFillColor(0)
 
   infoGroup.x = display.contentCenterX
-  infoGroup.y = display.contentHeight + (infoGroup.height / 2) - 125
+  infoGroup.y = display.contentHeight + (infoGroup.height / 2) - 25
   local yStatic = infoGroup.y
   infoGroup:addEventListener('touch', function(event) 
     if event.phase == 'moved' then

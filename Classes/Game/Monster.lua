@@ -21,18 +21,19 @@ function Monster:new(class, x, y)
     return nil
   else
     monster = {
-      side = 'monster',
-      class = String:filterLetters(classFile:read()), 
-      desc = classFile:read(),
-      attack = String:filterNumbers(classFile:read()), 
-      defense = String:filterNumbers(classFile:read()), 
-      speed = (String:filterNumbers(classFile:read())), 
-      slackTime = String:filterNumbers(classFile:read()), 
-      health = String:filterNumbers(classFile:read()), 
-      sightRadius = String:filterNumbers(classFile:read()),
+      side =            'monster',
+      class =           String:filterLetters(classFile:read()), 
+      desc =            classFile:read(),
+      attack =          String:filterNumbers(classFile:read()), 
+      defense =         String:filterNumbers(classFile:read()), 
+      speed =           String:filterNumbers(classFile:read()), 
+      slackTime =       String:filterNumbers(classFile:read()), 
+      health =          String:filterNumbers(classFile:read()), 
+      sightRadius =     String:filterNumbers(classFile:read()),
+      poisonStrength =  String:filterNumbers(classFile:read()),
 
-      hasChanged = false,
-      target = nil
+      hasChanged =  false,
+      target =      nil
     }
     monster.baseHealth = monster.health
     monster.id = monster.class .. Monster.monsterIndex
@@ -152,13 +153,11 @@ function Monster:new(class, x, y)
       monster.view.smokeSprite.animate('Poof')
     end
 
-    monster.onDamaged = function(source)
+    monster.onDamaged = function(source, options)
       if monster.health > 0 then
         local damage = (options and options.isDefenseNulled) and source.attack or math.floor(source.attack - monster.defense / 2)
         damage = damage > 0 and damage or 0
         monster.health = monster.health - damage
-
-        print('Damage: ' .. damage)
 
         monster.view.health.text = 'Health: ' .. monster.health
 
@@ -216,9 +215,10 @@ function Monster:new(class, x, y)
         end
       end
     end
-    monster.onPoisoned = function()
+    monster.onPoisoned = function(source)
+      local damage = source.poisonStrength
       if monster.health > 0 then 
-        timer.performWithDelay(2000, function() monster.onDamaged({ attack = 5 }, { isDefenseNulled = true }) end, 5)
+        timer.performWithDelay(2000, function() monster.onDamaged({ attack = damage }, { isDefenseNulled = true }) end, 5)
       end
     end
 

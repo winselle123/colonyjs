@@ -25,21 +25,23 @@ function Guardian:new(class)
     return nil
   else
     guardian = {
-      side = 'guardian',
-      class = String:filterLetters(classFile:read()), 
-      desc = classFile:read(),
-      rangeType = String:filterLetters(classFile:read()),
-      attack = String:filterNumbers(classFile:read()), 
-      defense = String:filterNumbers(classFile:read()), 
-      speed = (String:filterNumbers(classFile:read())), 
-      slackTime = String:filterNumbers(classFile:read()), 
-      health = String:filterNumbers(classFile:read()), 
-      sightRadius = String:filterNumbers(classFile:read()),
+      side =            'guardian',
+      class =           String:filterLetters(classFile:read()), 
+      desc =            classFile:read(),
+      rangeType =       String:filterLetters(classFile:read()),
+      attack =          String:filterNumbers(classFile:read()), 
+      defense =         String:filterNumbers(classFile:read()), 
+      speed =           String:filterNumbers(classFile:read()), 
+      slackTime =       String:filterNumbers(classFile:read()), 
+      health =          String:filterNumbers(classFile:read()), 
+      sightRadius =     String:filterNumbers(classFile:read()),
+      shieldStrength =  String:filterNumbers(classFile:read()),
+      poisonStrength =  String:filterNumbers(classFile:read()),
 
-      isWalking = false,
-      isChanneling = false,
-      isDestroyed = false,
-      hasChanged = false
+      isWalking =       false,
+      isChanneling =    false,
+      isDestroyed =     false,
+      hasChanged =      false
     }
     guardian.baseHealth = guardian.health
     guardian.id = guardian.class .. Guardian.guardianIndex
@@ -78,7 +80,7 @@ function Guardian:new(class)
           guardian.isWalking = true
         end, 
         onComplete = function() 
-          guardian.view.sprite.animate('Standing' .. String:toTitleCase(direction))
+          guardian.view.sprite.animate('Standing')
           guardian.isWalking = false
           callback()
           return
@@ -103,7 +105,7 @@ function Guardian:new(class)
         elseif options.direction == 'left' then
           guardian.x = guardian.x - 75
         end
-        guardian.view.sprite.animate('Standing' .. String:toTitleCase(options.direction))
+        guardian.view.sprite.animate('Standing')
         callback()
       end)
     end
@@ -125,7 +127,7 @@ function Guardian:new(class)
         elseif options.direction == 'left' then
           guardian.x = guardian.x - 200
         end
-        guardian.view.sprite.animate('Standing' .. String:toTitleCase(options.direction))
+        guardian.view.sprite.animate('Standing')
         callback()
       end)
     end
@@ -149,7 +151,7 @@ function Guardian:new(class)
       timer.performWithDelay(channelTime, function()
         guardian.isChanneling = false
         guardian.x, guardian.y = x, y
-        guardian.view.sprite.animate('Standing' .. String:toTitleCase(direction))
+        guardian.view.sprite.animate('Standing')
         callback()
       end)
     end
@@ -207,7 +209,7 @@ function Guardian:new(class)
                 for i, v in ipairs(charSet) do
                   if v.parent.side == 'monster' then
                     if guardian.health > 0 and (v.parent and v.parent.health > 0) then
-                      if options and options.poisoned then v.parent.onPoisoned() end 
+                      if options and options.poisoned then v.parent.onPoisoned(guardian) end 
                       v.parent.onDamaged(guardian)
                     end
                   end
@@ -241,12 +243,12 @@ function Guardian:new(class)
         timer.performWithDelay(channelTime, function()      
           guardian.isChanneling = false
           guardian.view.shieldSprite.isVisible = true
-          guardian.health = guardian.health + 10
+          guardian.health = (options and options.charged) and guardian.health + (guardian.shieldStrength * 1.25) or guardian.health + guardian.shieldStrength
 
           if options and options.charged then guardian.view.shieldSprite.xScale, guardian.view.shieldSprite.yScale = 5, 5 end
 
           timer.performWithDelay(1000, function() 
-            guardian.health = guardian.health - 10
+          guardian.health = (options and options.charged) and guardian.health - (guardian.shieldStrength * 1.25) or guardian.health - guardian.shieldStrength
 
             if guardian.health > 0 then 
               guardian.view.shieldSprite.xScale, guardian.view.shieldSprite.yScale = 3, 3
@@ -283,7 +285,7 @@ function Guardian:new(class)
                 for i, v in ipairs(charSet) do
                   if v.parent.side == 'guardian' then
                     if v.parent.health > 0 then
-                      v.parent.health = v.parent.health + 5
+                      v.parent.health = v.parent.health + (guardian.shieldStrength * 0.75)
                       print(v.parent.health - 5 .. ' => ' .. v.parent.health)
 
                       timer.performWithDelay(1000, function() 
@@ -376,7 +378,7 @@ function Guardian:new(class)
         if #guardian.events.eventSet['onEnemySeen'].skillSet ~= 0 then 
           if not guardian.target then
             if enemy.health > 0 then
-              guardian.view.sprite.animate('Standing' .. (enemy.x > guardian.x and 'Right' or 'Left'))
+              guardian.view.sprite.animate('Standing')
               transition.cancel(guardian.view)
               guardian.target = enemy 
 
@@ -395,7 +397,7 @@ function Guardian:new(class)
         if #guardian.events.eventSet['onAllySeen'].skillSet ~= 0 then 
           if not guardian.ally then
             if ally.health > 0 then
-              guardian.view.sprite.animate('Standing' .. (ally.x > guardian.x and 'Right' or 'Left'))
+              guardian.view.sprite.animate('Standing')
               transition.cancel(guardian.view)
               guardian.ally = ally 
 
@@ -409,9 +411,10 @@ function Guardian:new(class)
         end
       end
     end
-    guardian.onPoisoned = function()
+    guardian.onPoisoned = function(source)
+      local damage = source.poisonStrength
       if guardian.health > 0 then 
-        timer.performWithDelay(2000, function() guardian.onDamaged({ attack = 5 }, { isDefenseNulled = true }) end, 5)
+        timer.performWithDelay(2000, function() guardian.onDamaged({ attack = damage }, { isDefenseNulled = true }) end, 5)
       end
     end
 

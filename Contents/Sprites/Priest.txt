@@ -1,0 +1,42 @@
+151
+221
+start
+Drop 0 1
+2 5 27 48
+end
+start
+Drag 0 1
+2 5 27 48
+end
+start
+Standing 0 1
+2 5 27 48
+end
+start
+WalkingLeft 600 0
+31 112 29 53
+61 112 29 53
+91 112 29 53
+121 112 29 53
+end
+start
+WalkingRight 600 0
+31 166 29 53
+61 166 29 53
+91 166 29 53
+121 166 29 53
+end
+start
+WalkingUp 600 0
+31 60 29 50
+61 60 29 50
+91 60 29 50
+121 60 29 50
+end
+start
+WalkingDown 600 0
+31 5 29 50
+61 5 29 50
+91 5 29 50
+121 5 29 50
+end
