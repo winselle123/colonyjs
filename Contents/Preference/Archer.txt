@@ -1,0 +1,4 @@
+HairDefault
+EyeDefault
+ClothesDefault
+HatDefault

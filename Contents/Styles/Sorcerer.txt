@@ -1,0 +1,10 @@
+HairBlue
+HairWhite
+EyeBlack
+EyewHite
+CloakBlue
+CloakBrown
+AccessoryBlue
+AccessoryBrown
+SphereBlue
+SphereBrown

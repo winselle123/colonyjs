@@ -1,0 +1,6 @@
+EyeBlack
+EyeWhite
+CloakBlue
+CloakBrown
+PantsBlue
+PantsBrown

@@ -1,0 +1,8 @@
+HairBlue
+HairWhite
+EyeBlack
+EyeWhite
+HelmBlue
+HelmBrown
+ClothBlue
+ClothBrown

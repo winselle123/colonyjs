@@ -1,0 +1,6 @@
+HairBlue
+HairWhite
+EyeBlack
+EyeWhite
+ClothesBlack
+ClothesGreen
