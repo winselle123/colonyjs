@@ -69,9 +69,11 @@ function StyleRenderer:renderStyle()
 	    defaultFile = 'Assets/ClassIcons/' .. line .. '.png',
 	    overFile = 'Assets/ClassIcons/' .. line .. '.png',
 	    onEvent = function( event )
-		  if event.phase == 'ended' then
-			if saveButton ~= nil then
-			  display.remove(saveButton)
+		    if event.phase == 'ended' then
+			    if saveButton ~= nil then
+			      display.remove(saveButton)
+          end
+        end
 			end			
 			
 			sprite = display.newImageRect('Assets/Sprites/SpriteTry.png', 55, 100)
@@ -211,7 +213,8 @@ function StyleRenderer:renderStyle()
 						  itemIndex = itemIndex - 1
 					    end
 					    if currentItem[itemIndex] ~= nil then
-						  table.remove(currentItem, event.target.id)
+						    table.remove(currentItem, event.target.id)
+              end
 						end
 					    table.insert(currentItem, event.target.id, item[itemIndex])	  
 					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 75)
@@ -237,17 +240,17 @@ function StyleRenderer:renderStyle()
 			  path = system.pathForFile('Contents/Preference/' .. class .. '.txt', system.ResourceDirectory)
 			  file = io.open(path, 'r')
 			  for line in file:lines() do
-				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
-				image.x = display.contentCenterX + 170
-				image.y = display.contentCenterY
-				num2 = num2 + 1
+				  image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
+				  image.x = display.contentCenterX + 170
+				  image.y = display.contentCenterY
+				  num2 = num2 + 1
 			  end
 			else
 			  for line in file:lines() do
-				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
-				image.x = display.contentCenterX + 170
-				image.y = display.contentCenterY
-				num2 = num2 + 1
+				  image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
+				  image.x = display.contentCenterX + 170
+				  image.y = display.contentCenterY
+				  num2 = num2 + 1
 			  end
 			  file:close()
 			end	
@@ -265,6 +268,7 @@ function StyleRenderer:renderStyle()
 	leftMe.x = display.contentWidth * .05
 	leftMe.y = display.contentHeight * .055
 	leftMe.xScale = .5
+
 	local rightMe = display.newImageRect(chooseGroup, 'Assets/Buttons/Btn_Right.png', 40, 40)
 	rightMe.x = display.contentWidth * .95
 	rightMe.y = display.contentHeight * .055

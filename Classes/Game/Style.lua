@@ -7,8 +7,7 @@ function Style:render()
 end
 
 function Style:load(class)
-
-
+  
 end
 
 return Style
