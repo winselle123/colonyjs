@@ -1,6 +1,12 @@
 HairBlue
-HairWhite
+HairRed
+HairYellow
+HairPurple
 EyeBlack
-EyeWhite
-ClothesBlack
-ClothesGreen
+EyeOrange
+EyeRed
+EyeYellow
+ClothesGray
+ClothesOrange
+ClothesRed
+ClothesYellow
