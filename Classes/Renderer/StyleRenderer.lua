@@ -237,17 +237,17 @@ function StyleRenderer:renderStyle()
 			  path = system.pathForFile('Contents/Preference/' .. class .. '.txt', system.ResourceDirectory)
 			  file = io.open(path, 'r')
 			  for line in file:lines() do
-				--[[image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
+				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
 				image.x = display.contentCenterX + 170
 				image.y = display.contentCenterY
-				num2 = num2 + 1--]]
+				num2 = num2 + 1
 			  end
 			else
 			  for line in file:lines() do
-				--[[image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
+				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
 				image.x = display.contentCenterX + 170
 				image.y = display.contentCenterY
-				num2 = num2 + 1-]]
+				num2 = num2 + 1
 			  end
 			  file:close()
 			end	
