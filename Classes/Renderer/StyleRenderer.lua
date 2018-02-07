@@ -72,9 +72,7 @@ function StyleRenderer:renderStyle()
 		    if event.phase == 'ended' then
 			    if saveButton ~= nil then
 			      display.remove(saveButton)
-          end
-        end
-			end			
+				end
 			
 			sprite = display.newImageRect('Assets/Sprites/SpriteTry.png', 75, 100)
 			sprite.x = display.contentCenterX + 170
@@ -213,8 +211,7 @@ function StyleRenderer:renderStyle()
 						  itemIndex = itemIndex - 1
 					    end
 					    if currentItem[itemIndex] ~= nil then
-						    table.remove(currentItem, event.target.id)
-              end
+						  table.remove(currentItem, event.target.id)
 						end
 					    table.insert(currentItem, event.target.id, item[itemIndex])	  
 					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 75)
@@ -240,17 +237,17 @@ function StyleRenderer:renderStyle()
 			  path = system.pathForFile('Contents/Preference/' .. class .. '.txt', system.ResourceDirectory)
 			  file = io.open(path, 'r')
 			  for line in file:lines() do
-				  image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
-				  image.x = display.contentCenterX + 170
-				  image.y = display.contentCenterY
-				  num2 = num2 + 1
+				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
+				image.x = display.contentCenterX + 170
+				image.y = display.contentCenterY
+				num2 = num2 + 1
 			  end
 			else
 			  for line in file:lines() do
-				  image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
-				  image.x = display.contentCenterX + 170
-				  image.y = display.contentCenterY
-				  num2 = num2 + 1
+				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
+				image.x = display.contentCenterX + 170
+				image.y = display.contentCenterY
+				num2 = num2 + 1
 			  end
 			  file:close()
 			end	
