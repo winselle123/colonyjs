@@ -1,7 +1,11 @@
 HairBlue
-HairWhite
+HairRed
+HairYellow
+HairPurple
 EyeBlack
-EyeWhite
+EyeOrange
+EyeRed
+EyeYellow
 HelmBlue
 HelmBrown
 ClothBlue

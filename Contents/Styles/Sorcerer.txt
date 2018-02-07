@@ -1,7 +1,11 @@
 HairBlue
-HairWhite
+HairRed
+HairYellow
+HairPurple
 EyeBlack
-EyewHite
+EyeOrange
+EyeRed
+EyeYellow
 CloakBlue
 CloakBrown
 AccessoryBlue

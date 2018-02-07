@@ -1,5 +1,7 @@
 EyeBlack
-EyeWhite
+EyeOrange
+EyeRed
+EyeYellow
 CloakBlue
 CloakBrown
 PantsBlue

@@ -1,4 +1,6 @@
 EyeBlack
-EyeWhite
+EyeOrange
+EyeRed
+EyeYellow
 CloakBblue
 CloakBrown
