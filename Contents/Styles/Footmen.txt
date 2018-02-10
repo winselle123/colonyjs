@@ -3,7 +3,6 @@ HairRed
 HairYellow
 HairPurple
 EyeBlack
-<<<<<<< HEAD
 EyeOrange
 EyeRed
 EyeYellow
@@ -11,8 +10,3 @@ ClothesGray
 ClothesOrange
 ClothesRed
 ClothesYellow
-=======
-EyeWhite
-ClothesBlack
-ClothesGreen
->>>>>>> a8ba6e1942e425713f6385d1807b26b6ec78d291

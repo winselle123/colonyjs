@@ -182,10 +182,10 @@ function StyleRenderer:renderStyle()
 						  table.remove(currentItem, event.target.id) 
 						end
 					    table.insert(currentItem, event.target.id, item[itemIndex])
-					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 75)
+					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 100)
 					    showImage.x = display.contentCenterX + 170
 					    showImage.y = display.contentCenterY
-					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 75)
+					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 100)
 					    showImage.x = xOfButton2 - xOfButton * 1.5
 					    showImage.y = display.contentHeight * .2 + ((event.target.id - 1 ) * 250)
 					  end
@@ -214,10 +214,10 @@ function StyleRenderer:renderStyle()
 						  table.remove(currentItem, event.target.id)
 						end
 					    table.insert(currentItem, event.target.id, item[itemIndex])	  
-					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 75)
+					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 100)
 					    showImage.x = display.contentCenterX + 170
 					    showImage.y = display.contentCenterY
-					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 75)
+					    showImage = display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[event.target.id] .. '/' .. currentItem[event.target.id] .. '.png', 75, 100)
 					    showImage.x = xOfButton2 - xOfButton * 1.5
 					    showImage.y = display.contentHeight * .2 + ((event.target.id - 1 ) * 250)
 					  end
@@ -237,14 +237,14 @@ function StyleRenderer:renderStyle()
 			  path = system.pathForFile('Contents/Preference/' .. class .. '.txt', system.ResourceDirectory)
 			  file = io.open(path, 'r')
 			  for line in file:lines() do
-				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
+				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 100)
 				image.x = display.contentCenterX + 170
 				image.y = display.contentCenterY
 				num2 = num2 + 1
 			  end
 			else
 			  for line in file:lines() do
-				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 75)
+				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 100)
 				image.x = display.contentCenterX + 170
 				image.y = display.contentCenterY
 				num2 = num2 + 1
