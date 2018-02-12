@@ -1,13 +1,11 @@
 local Widget = require('widget')
 local ComponentRenderer = require('Classes.Renderer.ComponentRenderer')
+local String = require('Classes.System.String')
 
 local StyleRenderer = {}
 
 function StyleRenderer:renderStyle()
-  local background = display.newImageRect('Assets/Backgrounds/grass.png', display.contentWidth, display.contentHeight)
-  background.x = display.contentCenterX
-  background.y = display.contentCenterY
-
+  
   local chooseGroup = display.newGroup()
   local guardianIcon
   local xIcons = display.contentWidth * .05
@@ -34,7 +32,8 @@ function StyleRenderer:renderStyle()
     end
     for val in filed:lines() do
       if string.find(val, itemList[params]) then
-        table.insert(item, val)
+        val = String:filterLetters(val)
+		table.insert(item, val)
 	  end
 	end
 	filed:close()
@@ -146,9 +145,8 @@ function StyleRenderer:renderStyle()
 			local xOfButton = display.contentWidth * .1
 			local xOfButton2 = xOfButton + 215
 			local yOfButton = display.contentHeight * .2
-			class = line
+			class = String:filterLetters(line)
 			local image
-
 			local arrowsContain = display.newRoundedRect(containerGroup, display.contentWidth * .25, display.contentHeight * .54, display.contentWidth * .4, display.contentHeight *.87, 25 )
 			chooseContain:setFillColor(1, 1, 1)
 			path = system.pathForFile('Contents/Styles/StyleChange.txt', system.ResourceDirectory) 
@@ -192,7 +190,7 @@ function StyleRenderer:renderStyle()
 				    end
 				    }
 				  
-				  rectContainer = display.newRect(itemGroup, xOfButton2 - xOfButton * 1.5, yOfButton, 100, 100)
+				  rectContainer = display.newRoundedRect(itemGroup, xOfButton2 - xOfButton * 1.5, yOfButton, 100, 100, 25)
 				  rectContainer:setFillColor(0, 0, 0)
 				  
 				  rightButton = Widget.newButton{
@@ -237,6 +235,8 @@ function StyleRenderer:renderStyle()
 			  path = system.pathForFile('Contents/Preference/' .. class .. '.txt', system.ResourceDirectory)
 			  file = io.open(path, 'r')
 			  for line in file:lines() do
+				line = String:filterLetters(line)
+				itemList[num2] = String:filterLetters(itemList[num2])
 				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 100)
 				image.x = display.contentCenterX + 170
 				image.y = display.contentCenterY
@@ -244,6 +244,8 @@ function StyleRenderer:renderStyle()
 			  end
 			else
 			  for line in file:lines() do
+				line = String:filterLetters(line)
+				itemList[num2] = String:filterLetters(itemList[num2])
 				image=display.newImageRect(itemGroup, 'Assets/Style/' .. itemList[num2] .. '/' .. line .. '.png', 75, 100)
 				image.x = display.contentCenterX + 170
 				image.y = display.contentCenterY
