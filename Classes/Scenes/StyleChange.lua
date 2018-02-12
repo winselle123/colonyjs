@@ -23,6 +23,10 @@ function scene:show( event )
   local phase = event.phase
 
   if ( phase == "will" ) then
+	--INITIALIZE BACKGROUND
+	local background = display.newImageRect('Assets/Backgrounds/Grass.png', display.contentWidth, display.contentHeight)
+	background.x = display.contentCenterX
+	background.y = display.contentCenterY
     -- Code here runs when the scene is still off screen (but is about to come on screen)
     Game.sceneActivated = 'Change looks'
 	Style:render()
